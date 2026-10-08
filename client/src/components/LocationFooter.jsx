@@ -33,7 +33,7 @@ export default function LocationFooter({ settings, onOpenAdmin }) {
               </div>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed font-normal">
-              Tradição, cuidado e excelência em cada detalhe. O melhor espaço para você manter seu estilo em dia com pontualidade.
+              Sistema de agendamento online e atendimento exclusivo com hora marcada. Tradição desde 1999.
             </p>
           </div>
 

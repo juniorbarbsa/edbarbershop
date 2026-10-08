@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ServicesSection from './components/ServicesSection';
 import BookingSection from './components/BookingSection';
-import AboutSection from './components/AboutSection';
 import LocationFooter from './components/LocationFooter';
 import AdminModal from './components/AdminModal';
 import { getPublicInfo } from './api';
@@ -87,14 +86,7 @@ export default function App() {
           settings={settings}
           selectedService={selectedService}
           setSelectedService={setSelectedService}
-          onAppointmentCreated={() => {
-            // Can reload or trigger analytics
-          }}
-        />
-
-        {/* Heritage & Values */}
-        <AboutSection
-          settings={settings}
+          onAppointmentCreated={() => {}}
         />
 
         {/* Location & Footer */}

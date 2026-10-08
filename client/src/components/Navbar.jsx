@@ -62,21 +62,21 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
           <div className="hidden md:flex items-center gap-5">
             <button 
               onClick={() => document.getElementById('servicos')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-xs font-medium text-slate-300 hover:text-white transition tracking-wide"
+              className="text-xs font-medium text-slate-300 hover:text-white transition tracking-wide cursor-pointer"
             >
-              Serviços
+              Serviços & Preços
             </button>
             <button 
-              onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-xs font-medium text-slate-300 hover:text-white transition tracking-wide"
+              onClick={onScrollToBooking}
+              className="text-xs font-medium text-slate-300 hover:text-white transition tracking-wide cursor-pointer"
             >
-              História
+              Agendar Horário
             </button>
             <button 
               onClick={() => document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-xs font-medium text-slate-300 hover:text-white transition tracking-wide"
+              className="text-xs font-medium text-slate-300 hover:text-white transition tracking-wide cursor-pointer"
             >
-              Contato
+              Localização
             </button>
 
             {/* Agendar CTA */}
@@ -139,13 +139,7 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
               onClick={() => { setMobileMenuOpen(false); document.getElementById('servicos')?.scrollIntoView({ behavior: 'smooth' }); }}
               className="text-left text-sm py-1.5 text-slate-300"
             >
-              Nossos Serviços
-            </button>
-            <button 
-              onClick={() => { setMobileMenuOpen(false); document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className="text-left text-sm py-1.5 text-slate-300"
-            >
-              História da Barbearia
+              Serviços & Preços
             </button>
             <button 
               onClick={() => { setMobileMenuOpen(false); document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }); }}

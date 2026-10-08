@@ -14,15 +14,15 @@ export default function ServicesSection({ services, onSelectService }) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
+        <div className="text-center max-w-xl mx-auto mb-12 space-y-2">
           <span className="text-[11px] font-bold tracking-widest uppercase text-slate-400">
-            Nossos Serviços
+            Tabela de Serviços
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-['Outfit']">
-            Cuidado & Precisão
+          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-['Outfit']">
+            Valores & Duração dos Atendimentos
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-            Do corte clássico às técnicas modernas de navalha e barba terapia. Escolha seu procedimento para agendar.
+          <p className="text-xs sm:text-sm text-slate-400">
+            Selecione o serviço desejado para visualizar os horários disponíveis e agendar.
           </p>
         </div>
 
