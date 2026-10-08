@@ -69,16 +69,16 @@ npm start
 ## 🌐 Hospedagem Gratuita no Render (100% Grátis)
 
 O projeto já está sincronizado no GitHub oficial:
-👉 **[github.com/juniorbarbsa/ed-barber-shop](https://github.com/juniorbarbsa/ed-barber-shop)**
+👉 **[github.com/juniorbarbsa/edbarbershop](https://github.com/juniorbarbsa/edbarbershop)**
 
 ### 🚀 Publicação em 1 Clique no Render:
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/juniorbarbsa/ed-barber-shop)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/juniorbarbsa/edbarbershop)
 
 1. Acesse [render.com](https://render.com) e conecte com seu GitHub.
 2. Clique no botão acima ou vá em **New +** > **Blueprint** (ou **Web Service**).
-3. Selecione o repositório **juniorbarbsa/ed-barber-shop**.
+3. Selecione o repositório **juniorbarbsa/edbarbershop**.
 4. Como o arquivo `render.yaml` já está configurado na raiz com o plano gratuito (`plan: free`), o Render configurará tudo automaticamente:
-   - **Build Command**: `npm run build`
+   - **Build Command**: `npm install && npm run build`
    - **Start Command**: `npm start`
    - **Plano**: `Free` (sem custos)
 5. Clique em **Apply** / **Deploy**. O sistema estará no ar em instantes com HTTPS e link público ativo.
