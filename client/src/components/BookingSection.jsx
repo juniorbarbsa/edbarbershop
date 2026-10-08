@@ -40,10 +40,23 @@ export default function BookingSection({
   afterTomorrow.setDate(today.getDate() + 2);
   const afterTomorrowIso = formatIsoDate(afterTomorrow);
 
+  const DEFAULT_PROCEDURES = [
+    'Corte Clássico & Degradê',
+    'Barba Terapia com Toalha Quente',
+    'Combo VIP: Corte + Barba',
+    'Acabamento & Pezinho',
+    'Sobrancelha na Navalha',
+    'Pigmentação de Barba ou Cabelo',
+    'Platinado / Nevou',
+    'Outro Procedimento'
+  ];
+
   const [currentMonth, setCurrentMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [selectedDate, setSelectedDate] = useState(todayIso);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [serviceNote, setServiceNote] = useState(''); // Ex: Corte, Barba, etc.
+  const [selectedProcedure, setSelectedProcedure] = useState('Corte Clássico & Degradê');
+  const [customProcedure, setCustomProcedure] = useState('');
+  const [serviceNote, setServiceNote] = useState('');
   
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [slotsData, setSlotsData] = useState({ slots: [], isWorkDay: true, isBlocked: false });
@@ -182,15 +195,19 @@ export default function BookingSection({
       return;
     }
 
+    const procedureFinal = selectedProcedure === 'Outro Procedimento'
+      ? (customProcedure.trim() || 'Procedimento Personalizado')
+      : selectedProcedure;
+
     try {
       setSubmitting(true);
       setErrorMsg('');
 
       const result = await createAppointment({
-        clientName,
-        clientPhone,
+        clientName: clientName.trim(),
+        clientPhone: clientPhone.trim(),
         clientNotes: serviceNote ? serviceNote.trim() : '',
-        serviceName: serviceNote ? serviceNote.trim() : 'Corte / Barba',
+        serviceName: procedureFinal,
         date: selectedDate,
         time: selectedTime
       });
@@ -213,6 +230,8 @@ export default function BookingSection({
     setSelectedTime(null);
     setClientName('');
     setClientPhone('');
+    setSelectedProcedure('Corte Clássico & Degradê');
+    setCustomProcedure('');
     setServiceNote('');
   };
 
@@ -588,6 +607,48 @@ export default function BookingSection({
 
               <form onSubmit={handleConfirmAppointment} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Procedimento */}
+                  <div className="sm:col-span-2">
+                    <label className="text-xs font-semibold text-slate-200 block mb-1.5 flex items-center justify-between">
+                      <span>Escolha o Procedimento *</span>
+                      <span className="text-[10px] text-emerald-400 font-bold truncate max-w-[170px]">
+                        {selectedProcedure === 'Outro Procedimento' && customProcedure ? customProcedure : selectedProcedure}
+                      </span>
+                    </label>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mb-2">
+                      {DEFAULT_PROCEDURES.map((proc) => {
+                        const isSelected = selectedProcedure === proc;
+                        return (
+                          <button
+                            key={proc}
+                            type="button"
+                            onClick={() => setSelectedProcedure(proc)}
+                            className={`p-2 rounded-lg text-left text-xs font-medium transition cursor-pointer flex items-center justify-between border ${
+                              isSelected
+                                ? 'bg-white text-slate-950 font-bold border-white shadow-md'
+                                : 'bg-[#181c26] text-slate-300 border-[#232834] hover:bg-[#202532] hover:text-white'
+                            }`}
+                          >
+                            <span className="truncate pr-1">{proc}</span>
+                            {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {selectedProcedure === 'Outro Procedimento' && (
+                      <input
+                        type="text"
+                        required
+                        placeholder="Digite o procedimento desejado..."
+                        value={customProcedure}
+                        onChange={(e) => setCustomProcedure(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-lg barber-input text-xs placeholder:text-slate-500 mb-2"
+                      />
+                    )}
+                  </div>
+
                   <div>
                     <label className="text-xs font-medium text-slate-300 block mb-1">
                       Seu Nome *
@@ -619,11 +680,11 @@ export default function BookingSection({
 
                 <div>
                   <label className="text-xs font-medium text-slate-300 block mb-1">
-                    O que pretende fazer? (Opcional)
+                    Observação Adicional (Opcional)
                   </label>
                   <input
                     type="text"
-                    placeholder="Ex: Corte, Barba, Completo, Degradê"
+                    placeholder="Ex: degradê navalhado, barba desenhada..."
                     value={serviceNote}
                     onChange={(e) => setServiceNote(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-lg barber-input text-xs"
@@ -633,13 +694,15 @@ export default function BookingSection({
                 {/* Resumo do Horário Selecionado */}
                 <div className="p-3.5 rounded-xl bg-[#0e1117] border border-[#1f242e] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                   <div>
-                    <span className="text-slate-400">Data marcada: </span>
-                    <strong className="text-white">{selectedDate.split('-').reverse().join('/')}</strong>
+                    <span className="text-slate-400">Data & Horário: </span>
+                    <strong className="text-white">
+                      {selectedDate.split('-').reverse().join('/')} às {selectedTime ? selectedTime : 'Selecione'}
+                    </strong>
                   </div>
                   <div>
-                    <span className="text-slate-400">Horário: </span>
-                    <strong className="text-emerald-400 font-bold">
-                      {selectedTime ? selectedTime : 'Selecione no passo 2'}
+                    <span className="text-slate-400">Procedimento: </span>
+                    <strong className="text-emerald-400">
+                      {selectedProcedure === 'Outro Procedimento' && customProcedure ? customProcedure : selectedProcedure}
                     </strong>
                   </div>
                 </div>

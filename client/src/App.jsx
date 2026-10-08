@@ -9,6 +9,7 @@ import { getPublicInfo } from './api';
 
 export default function App() {
   const [settings, setSettings] = useState(null);
+  const [services, setServices] = useState([]);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -18,6 +19,7 @@ export default function App() {
     try {
       const data = await getPublicInfo();
       setSettings(data.settings);
+      setServices(data.services || []);
     } catch (err) {
       console.error('Erro ao carregar dados:', err);
     } finally {
@@ -84,6 +86,7 @@ export default function App() {
           isOpen={isBookingOpen}
           onClose={() => setIsBookingOpen(false)}
           settings={settings}
+          services={services}
           onAppointmentCreated={() => {}}
         />
 
