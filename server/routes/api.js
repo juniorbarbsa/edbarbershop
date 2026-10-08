@@ -60,7 +60,7 @@ function buildWhatsAppUrl(barberPhone, appointment, settings) {
 
   const shopTitle = settings?.shopName || 'Ed Barber Shop';
   const barberName = settings?.barberName || 'Ed';
-  const siteUrl = settings?.siteUrl || 'https://ed-barber-shop.onrender.com/';
+  const siteUrl = settings?.siteUrl || 'https://edbarbershop.onrender.com/';
 
   const lines = [
     toBold(`Agendamento - ${shopTitle}`),

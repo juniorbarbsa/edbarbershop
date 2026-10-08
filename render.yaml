@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: ed-barber-shop
+    name: edbarbershop
     runtime: node
     plan: free
     region: oregon
