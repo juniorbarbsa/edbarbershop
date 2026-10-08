@@ -11,7 +11,6 @@ import {
   ChevronRight, 
   Scissors, 
   MessageCircle, 
-  Sparkles,
   ArrowRight,
   RotateCcw
 } from 'lucide-react';
@@ -26,7 +25,6 @@ export default function BookingSection({
 }) {
   const isOnline = settings?.status === 'online';
 
-  // Format today's date YYYY-MM-DD
   const today = new Date();
   const formatIsoDate = (d) => {
     const year = d.getFullYear();
@@ -43,16 +41,16 @@ export default function BookingSection({
   const [slotsData, setSlotsData] = useState({ slots: [], isWorkDay: true, isBlocked: false });
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Client form fields
+  // Client form
   const [clientName, setClientName] = useState('');
   const [clientPhone, setClientPhone] = useState('');
   const [clientNotes, setClientNotes] = useState('');
 
-  // Booking states
+  // Submit states
   const [submitting, setSubmitting] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(null);
 
-  // Phone mask helper
+  // Phone mask
   const handlePhoneChange = (e) => {
     let val = e.target.value.replace(/\D/g, '');
     if (val.length > 11) val = val.slice(0, 11);
@@ -67,7 +65,7 @@ export default function BookingSection({
     setClientPhone(val);
   };
 
-  // Fetch slots whenever selectedDate changes
+  // Fetch slots
   useEffect(() => {
     if (!selectedDate) return;
     
@@ -100,13 +98,8 @@ export default function BookingSection({
   ];
   const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-  const getDaysInMonth = (year, month) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-
-  const getFirstDayOfMonth = (year, month) => {
-    return new Date(year, month, 1).getDay();
-  };
+  const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+  const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
 
   const currentYear = currentMonth.getFullYear();
   const currentMonthIdx = currentMonth.getMonth();
@@ -115,23 +108,19 @@ export default function BookingSection({
 
   const prevMonth = () => {
     const prev = new Date(currentYear, currentMonthIdx - 1, 1);
-    // Don't go to past months
     if (prev.getMonth() < today.getMonth() && prev.getFullYear() <= today.getFullYear()) return;
     setCurrentMonth(prev);
   };
 
   const nextMonth = () => {
-    // Limit to next 2 months for barbershop planning
     const next = new Date(currentYear, currentMonthIdx + 1, 1);
     setCurrentMonth(next);
   };
 
   const handleDateSelect = (dayNum) => {
     const selected = new Date(currentYear, currentMonthIdx, dayNum);
-    // Cannot select past date
     const todayAtZero = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     if (selected < todayAtZero) return;
-
     setSelectedDate(formatIsoDate(selected));
   };
 
@@ -152,7 +141,6 @@ export default function BookingSection({
     return workDays.includes(dayOfWeek);
   };
 
-  // Submit appointment
   const handleConfirmAppointment = async (e) => {
     e.preventDefault();
     if (!isOnline) {
@@ -196,7 +184,6 @@ export default function BookingSection({
       setBookingSuccess(result);
       if (onAppointmentCreated) onAppointmentCreated(result.appointment);
 
-      // Open WhatsApp automatically
       if (result.whatsappRedirectUrl) {
         window.open(result.whatsappRedirectUrl, '_blank');
       }
@@ -216,84 +203,83 @@ export default function BookingSection({
   };
 
   return (
-    <section id="agendar" className="py-16 sm:py-24 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="agendar" className="py-16 sm:py-24 relative border-t border-white/[0.04]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-pill border-white/10 text-xs font-bold text-red-400 uppercase tracking-widest">
-            <CalendarIcon className="w-3.5 h-3.5" />
-            <span>Agendamento Interativo</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight font-['Outfit']">
-            Reserve Sua Cadeira
+        <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
+          <span className="text-[11px] font-bold tracking-widest uppercase text-slate-400">
+            Agenda Online
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-['Outfit']">
+            Reserve Seu Horário
           </h2>
-          <p className="text-sm sm:text-base text-slate-300">
-            Escolha o serviço, selecione a data no calendário e o horário ideal para você.
+          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Selecione o serviço, data e horário. Os dados serão confirmados diretamente no WhatsApp do barbeiro.
           </p>
         </div>
 
-        {/* Offline Alert if barber paused bookings */}
+        {/* Offline Alert */}
         {!isOnline && (
-          <div className="max-w-3xl mx-auto mb-10 p-6 rounded-3xl glass-card border-amber-500/40 bg-amber-500/10 text-center space-y-3">
-            <div className="inline-flex p-3 rounded-2xl bg-amber-500/20 text-amber-400">
-              <AlertCircle className="w-8 h-8" />
+          <div className="max-w-2xl mx-auto mb-10 p-5 rounded-2xl glass-card border-amber-500/30 text-center space-y-3">
+            <div className="inline-flex p-2.5 rounded-xl bg-amber-500/10 text-amber-400">
+              <AlertCircle className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold text-amber-300">Agendamentos Pausados no Momento</h3>
-            <p className="text-sm text-amber-200/90 max-w-lg mx-auto">
-              {settings?.closedMessage || "O barbeiro está em pausa no momento. Você ainda pode enviar uma mensagem direta no WhatsApp para consultar futuros horários."}
+            <h3 className="text-base font-bold text-amber-300">Agendamentos Pausados</h3>
+            <p className="text-xs text-amber-200/80 max-w-md mx-auto">
+              {settings?.closedMessage || "O barbeiro está em pausa no momento. Você ainda pode enviar uma mensagem no WhatsApp."}
             </p>
             <div className="pt-2">
               <a
-                href={`https://api.whatsapp.com/send?phone=${settings?.whatsapp?.replace(/\D/g, '') || ''}&text=${encodeURIComponent('Olá Ed! Gostaria de consultar disponibilidade de horários.')}`}
+                href={`https://api.whatsapp.com/send?phone=${settings?.whatsapp?.replace(/\D/g, '') || ''}&text=${encodeURIComponent('Olá Ed! Gostaria de consultar futuros horários.')}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm hover:bg-amber-400 transition"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition"
               >
-                <MessageCircle className="w-4 h-4" />
-                Falar Diretamente no WhatsApp
+                <MessageCircle className="w-3.5 h-3.5" />
+                Falar no WhatsApp
               </a>
             </div>
           </div>
         )}
 
-        {/* Success Modal / Ticket View */}
+        {/* Success Modal / Clean Ticket View */}
         {bookingSuccess ? (
-          <div className="max-w-xl mx-auto p-6 sm:p-8 rounded-3xl glass-card border-emerald-500/40 bg-emerald-950/20 text-center space-y-6 shadow-2xl animate-fade-in">
-            <div className="w-16 h-16 mx-auto rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-              <CheckCircle2 className="w-10 h-10" />
+          <div className="max-w-md mx-auto p-6 sm:p-8 rounded-3xl glass-card border-white/10 text-center space-y-6 animate-fade-in shadow-2xl">
+            <div className="w-14 h-14 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <CheckCircle2 className="w-8 h-8" />
             </div>
 
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">
-                Agendamento Concluído!
+              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">
+                Horário Reservado
               </span>
-              <h3 className="text-2xl font-black text-white font-['Outfit'] mt-1">
-                Horário Reservado com Sucesso
+              <h3 className="text-2xl font-bold text-white font-['Outfit'] mt-1">
+                Agendamento Concluído!
               </h3>
-              <p className="text-sm text-slate-300 mt-2">
-                Sua vaga na barbearia foi garantida no sistema. Enviamos as informações para o WhatsApp do Ed Barber.
+              <p className="text-xs text-slate-400 mt-1">
+                Seu horário está gravado no sistema da barbearia.
               </p>
             </div>
 
-            {/* Ticket Summary Card */}
-            <div className="p-5 rounded-2xl bg-black/50 border border-white/10 text-left space-y-3 font-mono text-xs text-slate-300">
-              <div className="flex justify-between pb-2 border-b border-white/10">
-                <span className="text-slate-400">CLIENTE:</span>
-                <span className="text-white font-bold">{bookingSuccess.appointment.clientName}</span>
+            {/* Clean Ticket Card */}
+            <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.06] text-left space-y-2.5 text-xs text-slate-300">
+              <div className="flex justify-between pb-2 border-b border-white/[0.06]">
+                <span className="text-slate-400">Cliente:</span>
+                <span className="text-white font-medium">{bookingSuccess.appointment.clientName}</span>
               </div>
-              <div className="flex justify-between pb-2 border-b border-white/10">
-                <span className="text-slate-400">SERVIÇO:</span>
-                <span className="text-white font-bold">{bookingSuccess.appointment.serviceName}</span>
+              <div className="flex justify-between pb-2 border-b border-white/[0.06]">
+                <span className="text-slate-400">Serviço:</span>
+                <span className="text-white font-medium">{bookingSuccess.appointment.serviceName}</span>
               </div>
-              <div className="flex justify-between pb-2 border-b border-white/10">
-                <span className="text-slate-400">DATA & HORA:</span>
-                <span className="text-emerald-400 font-bold">
+              <div className="flex justify-between pb-2 border-b border-white/[0.06]">
+                <span className="text-slate-400">Data & Hora:</span>
+                <span className="text-slate-100 font-bold">
                   {bookingSuccess.appointment.date.split('-').reverse().join('/')} às {bookingSuccess.appointment.time}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">VALOR:</span>
+                <span className="text-slate-400">Total:</span>
                 <span className="text-white font-bold">
                   R$ {Number(bookingSuccess.appointment.price).toFixed(2).replace('.', ',')}
                 </span>
@@ -301,67 +287,68 @@ export default function BookingSection({
             </div>
 
             {/* Actions */}
-            <div className="space-y-3 pt-2">
+            <div className="space-y-2.5 pt-2">
               <a
                 href={bookingSuccess.whatsappRedirectUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition cursor-pointer"
+                className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer shadow-lg shadow-emerald-600/20"
               >
-                <MessageCircle className="w-5 h-5" />
-                <span>Abrir WhatsApp do Ed para Confirmar</span>
+                <MessageCircle className="w-4 h-4" />
+                <span>Confirmar no WhatsApp do Ed</span>
               </a>
 
               <button
                 onClick={handleResetBooking}
-                className="w-full py-3 rounded-xl glass-card text-xs text-slate-400 hover:text-white transition flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-white/[0.04] text-xs text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span>Fazer Outro Agendamento</span>
+                <span>Novo Agendamento</span>
               </button>
             </div>
           </div>
         ) : (
-          /* Main Interactive Glass Wizard */
-          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          /* Clean 2-Column Booking Studio */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* Left Column: Calendar & Time Slots */}
+            {/* Left Column: Step 1 (Services) + Step 2 (Calendar) + Step 3 (Times) */}
             <div className="lg:col-span-7 space-y-6">
               
-              {/* Step 1: Service selector pill */}
-              <div className="p-5 sm:p-6 rounded-3xl glass-card space-y-4">
+              {/* Step 1: Services Selector */}
+              <div className="p-6 rounded-3xl glass-card space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-red-600/20 text-red-400 text-xs flex items-center justify-center font-bold">
-                      1
-                    </span>
-                    <span>Escolha o Serviço</span>
-                  </h3>
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                    1. Escolha o Serviço
+                  </span>
                   {selectedService && (
-                    <span className="text-xs font-bold text-red-400">
+                    <span className="text-xs font-semibold text-slate-200">
                       R$ {Number(selectedService.price).toFixed(2).replace('.', ',')}
                     </span>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-56 overflow-y-auto pr-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-52 overflow-y-auto pr-1">
                   {services.map((srv) => {
                     const isSelected = selectedService?.id === srv.id;
                     return (
                       <div
                         key={srv.id}
                         onClick={() => setSelectedService(srv)}
-                        className={`p-3 rounded-2xl cursor-pointer border transition-all text-left flex items-center justify-between gap-2 ${
+                        className={`p-3 rounded-xl cursor-pointer border transition-all text-left flex items-center justify-between gap-2 ${
                           isSelected
-                            ? 'bg-red-600/20 border-red-500/60 shadow-[0_0_15px_rgba(239,68,68,0.15)] text-white'
-                            : 'bg-white/[0.03] border-white/10 hover:border-white/20 text-slate-300'
+                            ? 'bg-white text-slate-950 border-white shadow-md'
+                            : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.14] text-slate-300'
                         }`}
                       >
                         <div className="min-w-0">
-                          <p className="text-xs font-bold truncate text-white">{srv.name}</p>
-                          <p className="text-[11px] text-slate-400">{srv.durationMinutes} min</p>
+                          <p className={`text-xs font-semibold truncate ${isSelected ? 'text-slate-950' : 'text-white'}`}>
+                            {srv.name}
+                          </p>
+                          <p className={`text-[11px] ${isSelected ? 'text-slate-600' : 'text-slate-400'}`}>
+                            {srv.durationMinutes} min
+                          </p>
                         </div>
-                        <span className="text-xs font-black text-white shrink-0">
+                        <span className={`text-xs font-bold shrink-0 ${isSelected ? 'text-slate-950' : 'text-white'}`}>
                           R$ {Number(srv.price).toFixed(0)}
                         </span>
                       </div>
@@ -370,32 +357,28 @@ export default function BookingSection({
                 </div>
               </div>
 
-              {/* Step 2: Interactive Glass Calendar */}
-              <div className="p-5 sm:p-6 rounded-3xl glass-card space-y-5">
+              {/* Step 2: Minimalist Calendar */}
+              <div className="p-6 rounded-3xl glass-card space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-red-600/20 text-red-400 text-xs flex items-center justify-center font-bold">
-                      2
-                    </span>
-                    <span>Escolha a Data</span>
-                  </h3>
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                    2. Escolha a Data
+                  </span>
 
-                  {/* Month Navigation */}
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-300">
+                    <span className="text-xs font-medium text-slate-300">
                       {monthNames[currentMonthIdx]} {currentYear}
                     </span>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={prevMonth}
-                        className="p-1.5 rounded-lg glass-card hover:bg-white/10 text-slate-300 transition cursor-pointer"
+                        className="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition cursor-pointer"
                         title="Mês Anterior"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </button>
                       <button
                         onClick={nextMonth}
-                        className="p-1.5 rounded-lg glass-card hover:bg-white/10 text-slate-300 transition cursor-pointer"
+                        className="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition cursor-pointer"
                         title="Próximo Mês"
                       >
                         <ChevronRight className="w-4 h-4" />
@@ -404,23 +387,21 @@ export default function BookingSection({
                   </div>
                 </div>
 
-                {/* Days of week header */}
+                {/* Day of Week Labels */}
                 <div className="grid grid-cols-7 gap-1 text-center">
                   {dayNames.map((d, i) => (
-                    <div key={i} className="text-[11px] font-bold text-slate-500 py-1 uppercase tracking-wider">
+                    <div key={i} className="text-[10px] font-bold text-slate-400 py-1 uppercase">
                       {d}
                     </div>
                   ))}
                 </div>
 
-                {/* Calendar Days Grid */}
-                <div className="grid grid-cols-7 gap-1.5 text-center">
-                  {/* Empty cells before month start */}
+                {/* Days Grid */}
+                <div className="grid grid-cols-7 gap-1 text-center">
                   {Array.from({ length: firstDayOfWeek }).map((_, i) => (
-                    <div key={`empty-${i}`} className="h-10"></div>
+                    <div key={`empty-${i}`} className="h-9"></div>
                   ))}
 
-                  {/* Month days */}
                   {Array.from({ length: totalDays }).map((_, i) => {
                     const dayNum = i + 1;
                     const isPast = isDayPast(dayNum);
@@ -433,50 +414,45 @@ export default function BookingSection({
                         key={`day-${dayNum}`}
                         disabled={disabled}
                         onClick={() => handleDateSelect(dayNum)}
-                        className={`h-10 rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center relative cursor-pointer ${
+                        className={`h-9 rounded-lg text-xs font-medium transition-all flex flex-col items-center justify-center relative cursor-pointer ${
                           selected
-                            ? 'bg-gradient-to-br from-red-600 to-rose-600 text-white shadow-lg shadow-red-600/40 ring-2 ring-red-400'
+                            ? 'bg-white text-slate-950 font-bold shadow-md'
                             : disabled
-                            ? 'opacity-25 text-slate-600 cursor-not-allowed'
-                            : 'bg-white/[0.04] text-slate-200 hover:bg-white/15 hover:border-white/20 border border-transparent'
+                            ? 'opacity-20 text-slate-600 cursor-not-allowed'
+                            : 'text-slate-300 hover:bg-white/[0.08] hover:text-white'
                         }`}
                       >
                         <span>{dayNum}</span>
-                        {/* Dot indicator if today */}
-                        {today.getDate() === dayNum && today.getMonth() === currentMonthIdx && today.getFullYear() === currentYear && (
-                          <span className="w-1 h-1 rounded-full bg-blue-400 absolute bottom-1"></span>
+                        {today.getDate() === dayNum && today.getMonth() === currentMonthIdx && today.getFullYear() === currentYear && !selected && (
+                          <span className="w-1 h-1 rounded-full bg-red-400 absolute bottom-1"></span>
                         )}
                       </button>
                     );
                   })}
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-white/5">
+                <div className="flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-white/[0.04]">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                    <span>Data Selecionada</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    <span>Selecionado</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-400"></span>
                     <span>Hoje</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-slate-600"></span>
-                    <span>Fechado / Folga</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                    <span>Folga</span>
                   </div>
                 </div>
-
               </div>
 
-              {/* Step 3: Available Time Slots */}
-              <div className="p-5 sm:p-6 rounded-3xl glass-card space-y-4">
+              {/* Step 3: Time Chips */}
+              <div className="p-6 rounded-3xl glass-card space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-red-600/20 text-red-400 text-xs flex items-center justify-center font-bold">
-                      3
-                    </span>
-                    <span>Escolha o Horário</span>
-                  </h3>
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                    3. Horários Disponíveis
+                  </span>
                   <span className="text-xs text-slate-400">
                     {selectedDate.split('-').reverse().join('/')}
                   </span>
@@ -484,19 +460,19 @@ export default function BookingSection({
 
                 {slotsLoading ? (
                   <div className="py-8 text-center text-slate-400 text-xs flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-                    <span>Consultando horários disponíveis...</span>
+                    <div className="w-3.5 h-3.5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
+                    <span>Consultando horários...</span>
                   </div>
                 ) : !slotsData.isWorkDay ? (
-                  <div className="py-6 text-center text-amber-400/90 text-xs bg-amber-500/10 rounded-2xl border border-amber-500/20">
-                    A barbearia não realiza atendimentos neste dia da semana.
+                  <div className="py-4 text-center text-slate-400 text-xs bg-white/[0.02] rounded-xl border border-white/[0.04]">
+                    Barbearia fechada neste dia.
                   </div>
                 ) : slotsData.isBlocked ? (
-                  <div className="py-6 text-center text-amber-400/90 text-xs bg-amber-500/10 rounded-2xl border border-amber-500/20">
-                    Esta data está bloqueada para agendamentos.
+                  <div className="py-4 text-center text-slate-400 text-xs bg-white/[0.02] rounded-xl border border-white/[0.04]">
+                    Data bloqueada para agendamentos.
                   </div>
                 ) : slotsData.slots && slotsData.slots.length > 0 ? (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
+                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                     {slotsData.slots.map((slot) => {
                       const isSelected = selectedTime === slot.time;
                       return (
@@ -505,17 +481,17 @@ export default function BookingSection({
                           type="button"
                           disabled={!slot.available}
                           onClick={() => setSelectedTime(slot.time)}
-                          className={`py-2.5 px-2 rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center cursor-pointer ${
+                          className={`py-2 px-1.5 rounded-xl text-xs font-medium transition-all flex flex-col items-center justify-center cursor-pointer ${
                             isSelected
-                              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-lg shadow-red-600/30 ring-2 ring-white/50'
+                              ? 'bg-white text-slate-950 font-bold shadow-md'
                               : !slot.available
-                              ? 'bg-white/[0.02] text-slate-600 border border-white/5 cursor-not-allowed opacity-40'
-                              : 'bg-white/[0.05] text-slate-200 hover:bg-white/15 hover:text-white border border-white/10'
+                              ? 'bg-white/[0.01] text-slate-600 border border-transparent cursor-not-allowed opacity-35'
+                              : 'bg-white/[0.03] text-slate-300 hover:bg-white/[0.08] hover:text-white border border-white/[0.05]'
                           }`}
                         >
                           <span>{slot.time}</span>
                           {!slot.available && (
-                            <span className="text-[9px] font-normal text-slate-500">
+                            <span className="text-[8px] font-normal text-slate-500">
                               {slot.reason || 'Ocupado'}
                             </span>
                           )}
@@ -524,7 +500,7 @@ export default function BookingSection({
                     })}
                   </div>
                 ) : (
-                  <div className="py-6 text-center text-slate-400 text-xs">
+                  <div className="py-4 text-center text-slate-400 text-xs">
                     Nenhum horário disponível para esta data.
                   </div>
                 )}
@@ -532,46 +508,39 @@ export default function BookingSection({
 
             </div>
 
-            {/* Right Column: Client Form & Ticket Summary */}
+            {/* Right Column: Step 4 (Client Data) & Ticket Summary */}
             <div className="lg:col-span-5 space-y-6">
               
-              <div className="p-6 sm:p-7 rounded-3xl glass-card space-y-6 relative overflow-hidden">
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-red-600/20 text-red-400 text-xs flex items-center justify-center font-bold">
-                    4
-                  </span>
-                  <h3 className="text-base font-bold text-white">Seus Dados</h3>
-                </div>
+              <div className="p-6 sm:p-7 rounded-3xl glass-card space-y-5">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">
+                  4. Confirmação do Cliente
+                </span>
 
                 {errorMsg && (
-                  <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
+                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{errorMsg}</span>
                   </div>
                 )}
 
                 <form onSubmit={handleConfirmAppointment} className="space-y-4">
-                  {/* Name */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-red-400" />
-                      <span>Seu Nome Completo *</span>
+                  <div>
+                    <label className="text-[11px] font-medium text-slate-300 block mb-1">
+                      Nome Completo *
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="Ex: João da Silva"
+                      placeholder="Seu nome"
                       value={clientName}
                       onChange={(e) => setClientName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl glass-input text-sm"
+                      className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
                     />
                   </div>
 
-                  {/* WhatsApp */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>WhatsApp com DDD *</span>
+                  <div>
+                    <label className="text-[11px] font-medium text-slate-300 block mb-1">
+                      WhatsApp com DDD *
                     </label>
                     <input
                       type="text"
@@ -579,78 +548,70 @@ export default function BookingSection({
                       placeholder="(11) 99999-9999"
                       value={clientPhone}
                       onChange={handlePhoneChange}
-                      className="w-full px-4 py-3 rounded-xl glass-input text-sm"
+                      className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
                     />
-                    <span className="text-[10px] text-slate-400 block">
-                      Enviaremos a confirmação direta para este número
-                    </span>
                   </div>
 
-                  {/* Notes */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                      <FileText className="w-3.5 h-3.5 text-blue-400" />
-                      <span>Observação (Opcional)</span>
+                  <div>
+                    <label className="text-[11px] font-medium text-slate-300 block mb-1">
+                      Observação (Opcional)
                     </label>
                     <input
                       type="text"
-                      placeholder="Ex: Degradê bem disfarçado na navalha"
+                      placeholder="Ex: Preferência corte na tesoura"
                       value={clientNotes}
                       onChange={(e) => setClientNotes(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl glass-input text-sm"
+                      className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
                     />
                   </div>
 
-                  {/* Real-time Ticket Summary */}
-                  <div className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-2.5 text-xs">
+                  {/* Clean Receipt / Ticket */}
+                  <div className="p-4 rounded-2xl bg-black/35 border border-white/[0.06] space-y-2 text-xs">
                     <div className="flex justify-between items-center text-slate-400">
                       <span>Serviço:</span>
-                      <span className="text-white font-bold">{selectedService?.name || 'Não selecionado'}</span>
+                      <span className="text-white font-medium">{selectedService?.name || 'Selecione um serviço'}</span>
                     </div>
                     <div className="flex justify-between items-center text-slate-400">
                       <span>Data:</span>
-                      <span className="text-white font-bold">
+                      <span className="text-white font-medium">
                         {selectedDate.split('-').reverse().join('/')}
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-slate-400">
                       <span>Horário:</span>
-                      <span className="text-emerald-400 font-bold">{selectedTime || 'Selecione um horário'}</span>
+                      <span className="text-white font-medium">{selectedTime || 'Selecione um horário'}</span>
                     </div>
-                    <div className="pt-2 border-t border-white/10 flex justify-between items-center text-sm">
-                      <span className="font-semibold text-slate-300">Total a pagar:</span>
-                      <span className="font-black text-white text-base font-['Outfit']">
+                    <div className="pt-2 border-t border-white/[0.06] flex justify-between items-center">
+                      <span className="text-slate-300 font-medium">Total:</span>
+                      <span className="font-bold text-white text-base font-['Outfit']">
                         R$ {selectedService ? Number(selectedService.price).toFixed(2).replace('.', ',') : '0,00'}
                       </span>
                     </div>
                   </div>
 
-                  {/* Submit Button with WhatsApp Redirect */}
+                  {/* CTA */}
                   <button
                     type="submit"
                     disabled={submitting || !isOnline}
-                    className={`w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer ${
+                    className={`w-full py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer ${
                       !isOnline
                         ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-emerald-600 via-green-500 to-emerald-600 hover:from-emerald-500 hover:to-green-400 text-white shadow-emerald-600/30 hover:scale-[1.01] active:scale-[0.99]'
+                        : 'bg-white text-slate-950 hover:bg-slate-200 active:scale-95 shadow-md'
                     }`}
                   >
                     {submitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Registrando Agendamento...</span>
-                      </>
+                      <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>
                     ) : (
                       <>
-                        <MessageCircle className="w-5 h-5" />
+                        <MessageCircle className="w-4 h-4 text-emerald-600" />
                         <span>Confirmar & Abrir no WhatsApp</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </>
                     )}
                   </button>
 
-                  <p className="text-[11px] text-center text-slate-400 leading-tight">
-                    Ao confirmar, você será redirecionado para o WhatsApp da barbearia com a mensagem pronta.
+                  <p className="text-[10px] text-center text-slate-500">
+                    O sistema confirmará seu agendamento e abrirá a conversa do WhatsApp.
                   </p>
                 </form>
 

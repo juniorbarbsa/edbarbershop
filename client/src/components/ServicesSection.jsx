@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scissors, Sparkles, Clock, Check, ArrowRight } from 'lucide-react';
+import { Clock, ArrowRight } from 'lucide-react';
 
 export default function ServicesSection({ services, onSelectService }) {
   const formatPrice = (price) => {
@@ -10,84 +10,77 @@ export default function ServicesSection({ services, onSelectService }) {
   };
 
   return (
-    <section id="servicos" className="py-16 sm:py-24 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="servicos" className="py-16 sm:py-24 relative border-t border-white/[0.04]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-pill border-white/10 text-xs font-bold text-red-400 uppercase tracking-widest">
-            <Scissors className="w-3.5 h-3.5" />
-            <span>Nossos Procedimentos</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight font-['Outfit']">
-            Serviços & Especialidades
+        <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
+          <span className="text-[11px] font-bold tracking-widest uppercase text-slate-400">
+            Nossos Serviços
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-['Outfit']">
+            Cuidado & Precisão
           </h2>
-          <p className="text-sm sm:text-base text-slate-300">
-            Tradição na navalha, técnicas de fade modernas e tratamento de alto padrão para seu cabelo e barba.
+          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Do corte clássico às técnicas modernas de navalha e barba terapia. Escolha seu procedimento para agendar.
           </p>
         </div>
 
         {/* Grid of Services */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {services.map((service) => {
-            const isPopular = service.popular || service.badge;
-
             return (
               <div
                 key={service.id}
-                className={`group relative rounded-3xl p-6 sm:p-7 glass-card-interactive flex flex-col justify-between overflow-hidden ${
-                  isPopular ? 'border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.08)]' : ''
-                }`}
+                className="group relative rounded-2xl p-6 glass-card-interactive flex flex-col justify-between"
               >
-                {/* Accent glow on hover */}
-                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-36 h-36 bg-red-600/10 rounded-full blur-2xl group-hover:bg-red-600/25 transition-all"></div>
-
                 <div>
-                  {/* Top Badge & Duration */}
-                  <div className="flex items-center justify-between gap-2 mb-4">
+                  {/* Top Bar: Badge & Duration */}
+                  <div className="flex items-center justify-between gap-2 mb-3">
                     {service.badge ? (
-                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-white/[0.08] text-slate-200 border border-white/10">
                         {service.badge}
                       </span>
                     ) : (
-                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-semibold text-slate-400 bg-white/5 border border-white/5">
-                        Ed Barber Shop
+                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                        Procedimento
                       </span>
                     )}
 
-                    <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
-                      <Clock className="w-3.5 h-3.5 text-red-400" />
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" />
                       <span>{service.durationMinutes} min</span>
                     </div>
                   </div>
 
-                  {/* Title & Description */}
-                  <h3 className="text-xl font-bold text-white group-hover:text-red-400 transition-colors font-['Outfit'] mb-2">
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors font-['Outfit'] mb-2">
                     {service.name}
                   </h3>
                   
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6 font-normal">
+                  {/* Description */}
+                  <p className="text-xs text-slate-400 leading-relaxed mb-6 font-normal">
                     {service.description}
                   </p>
                 </div>
 
-                {/* Bottom Price & Button */}
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                {/* Bottom: Price & Button */}
+                <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                    <span className="text-[10px] uppercase font-medium text-slate-400 block">
                       Valor
                     </span>
-                    <span className="text-2xl font-black text-white font-['Outfit']">
+                    <span className="text-xl font-bold text-white font-['Outfit']">
                       {formatPrice(service.price)}
                     </span>
                   </div>
 
                   <button
                     onClick={() => onSelectService(service)}
-                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-red-600 text-white text-xs font-bold transition-all duration-200 flex items-center gap-2 group-hover:shadow-lg group-hover:shadow-red-600/30 cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-white/[0.06] group-hover:bg-white group-hover:text-slate-950 text-white text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 cursor-pointer"
                   >
                     <span>Agendar</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
 

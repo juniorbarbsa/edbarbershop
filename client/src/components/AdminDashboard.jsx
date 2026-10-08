@@ -378,52 +378,52 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
+      <div className="flex flex-wrap items-center gap-2 border-b border-white/[0.06] pb-4">
         <button
           onClick={() => setActiveTab('appointments')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'appointments'
-              ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
-              : 'glass-card text-slate-300 hover:text-white'
+              ? 'bg-white text-slate-950 shadow-md'
+              : 'glass-card text-slate-400 hover:text-white'
           }`}
         >
-          <Calendar className="w-4 h-4" />
+          <Calendar className="w-3.5 h-3.5" />
           <span>Agendamentos ({data?.appointments?.length || 0})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('services')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'services'
-              ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
-              : 'glass-card text-slate-300 hover:text-white'
+              ? 'bg-white text-slate-950 shadow-md'
+              : 'glass-card text-slate-400 hover:text-white'
           }`}
         >
-          <Scissors className="w-4 h-4" />
-          <span>Serviços & Preços ({data?.services?.length || 0})</span>
+          <Scissors className="w-3.5 h-3.5" />
+          <span>Serviços ({data?.services?.length || 0})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('blocks')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'blocks'
-              ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
-              : 'glass-card text-slate-300 hover:text-white'
+              ? 'bg-white text-slate-950 shadow-md'
+              : 'glass-card text-slate-400 hover:text-white'
           }`}
         >
-          <Ban className="w-4 h-4" />
-          <span>Bloquear Horários / Folgas ({data?.blockedSlots?.length || 0})</span>
+          <Ban className="w-3.5 h-3.5" />
+          <span>Bloqueios & Folgas ({data?.blockedSlots?.length || 0})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('settings')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'settings'
-              ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
-              : 'glass-card text-slate-300 hover:text-white'
+              ? 'bg-white text-slate-950 shadow-md'
+              : 'glass-card text-slate-400 hover:text-white'
           }`}
         >
-          <Settings className="w-4 h-4" />
+          <Settings className="w-3.5 h-3.5" />
           <span>Configurações & WhatsApp</span>
         </button>
       </div>
