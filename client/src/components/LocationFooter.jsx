@@ -110,7 +110,7 @@ export default function LocationFooter({ settings, onOpenAdmin }) {
               className="px-3.5 py-2 rounded-lg bg-[#161a22] hover:bg-[#1e2430] text-slate-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer border border-[#262c3b]"
             >
               <Lock className="w-3 h-3" />
-              <span>Painel (Senha: Ed5812)</span>
+              <span>Acessar Painel</span>
             </button>
           </div>
 
@@ -124,16 +124,18 @@ export default function LocationFooter({ settings, onOpenAdmin }) {
 
           <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-400">
             <span>Desenvolvido por</span>
+            <strong className="text-slate-200 font-bold">SCTECH</strong>
+            <span className="text-slate-600">•</span>
             <a 
               href="https://sctechinova.com.br" 
               target="_blank" 
               rel="noreferrer" 
-              className="font-bold text-slate-200 hover:text-white transition underline underline-offset-4 decoration-slate-600 hover:decoration-white"
+              className="text-slate-300 hover:text-white transition underline underline-offset-4 decoration-slate-600 hover:decoration-white font-medium"
             >
-              SCTECH (sctechinova.com.br)
+              sctechinova.com.br
             </a>
             <span className="text-slate-600">•</span>
-            <span className="text-slate-400">CNPJ: 59.070.203/0001-05</span>
+            <span>CNPJ: 59.070.203/0001-05</span>
           </div>
 
           <button

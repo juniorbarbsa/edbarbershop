@@ -18,8 +18,8 @@ const defaultState = {
     email: "edalves8127@gmail.com",
     whatsapp: "5573981164949",
     status: "online",
-    statusMessage: "Estamos atendendo! Escolha o melhor horário abaixo.",
     closedMessage: "No momento não estamos atendendo. Chame no WhatsApp para dúvidas.",
+    adminUsername: "ed",
     adminPasswordHash: "$2a$10$oMCi/c.PcnT4FnLkMNwFkehVSAtREe8VTYHohQCIUpQ.Ita48BjGe", // 'Ed5812'
     openingHour: "09:00",
     closingHour: "21:00",

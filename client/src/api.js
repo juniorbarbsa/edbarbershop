@@ -27,15 +27,19 @@ export async function createAppointment(data) {
   return json;
 }
 
-export async function loginAdmin(password) {
+export async function loginAdmin(credentials) {
+  const payload = typeof credentials === 'string'
+    ? { username: 'ed', password: credentials }
+    : credentials;
+
   const res = await fetch(`${API_BASE}/admin/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password })
+    body: JSON.stringify(payload)
   });
   const json = await res.json();
   if (!res.ok) {
-    throw new Error(json.error || 'Senha incorreta');
+    throw new Error(json.error || 'Usuário ou senha incorretos');
   }
   return json;
 }

@@ -5,6 +5,7 @@ import AdminDashboard from './AdminDashboard';
 
 export default function AdminModal({ isOpen, onClose, onSettingsUpdated }) {
   const [token, setToken] = useState(() => localStorage.getItem('ed_barber_admin_token') || null);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -18,6 +19,10 @@ export default function AdminModal({ isOpen, onClose, onSettingsUpdated }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!username.trim()) {
+      setErrorMsg('Informe o usuário ou e-mail de acesso.');
+      return;
+    }
     if (!password) {
       setErrorMsg('Informe a senha de acesso.');
       return;
@@ -26,14 +31,14 @@ export default function AdminModal({ isOpen, onClose, onSettingsUpdated }) {
     try {
       setLoading(true);
       setErrorMsg('');
-      const res = await loginAdmin(password);
+      const res = await loginAdmin({ username: username.trim(), password });
       if (res.token) {
         localStorage.setItem('ed_barber_admin_token', res.token);
         setToken(res.token);
         setPassword('');
       }
     } catch (err) {
-      setErrorMsg(err.message || 'Senha incorreta. Tente novamente.');
+      setErrorMsg(err.message || 'Usuário ou senha incorretos.');
     } finally {
       setLoading(false);
     }
@@ -96,7 +101,7 @@ export default function AdminModal({ isOpen, onClose, onSettingsUpdated }) {
                 Acesso do Barbeiro
               </h3>
               <p className="text-xs text-slate-400 max-w-xs mx-auto">
-                Digite sua senha de acesso para gerenciar agendamentos e horários.
+                Digite suas credenciais de acesso para gerenciar agendamentos e horários.
               </p>
             </div>
 
@@ -107,29 +112,40 @@ export default function AdminModal({ isOpen, onClose, onSettingsUpdated }) {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-4 text-left">
+            <form onSubmit={handleLogin} className="space-y-3.5 text-left">
               <div className="space-y-1">
                 <label className="text-[11px] font-medium text-slate-300">
-                  Senha de Acesso
+                  Usuário ou E-mail
+                </label>
+                <input
+                  type="text"
+                  autoFocus
+                  required
+                  placeholder="Seu usuário ou e-mail"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-lg barber-input text-xs"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[11px] font-medium text-slate-300">
+                  Senha
                 </label>
                 <input
                   type="password"
-                  autoFocus
                   required
-                  placeholder="Digite sua senha"
+                  placeholder="Sua senha de acesso"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-lg barber-input text-xs"
                 />
-                <p className="text-[10px] text-slate-500 pt-1">
-                  Senha de acesso: <strong className="text-slate-300">Ed5812</strong>
-                </p>
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-white hover:bg-slate-200 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer active:scale-95 shadow-md"
+                className="w-full py-3 rounded-xl bg-white hover:bg-slate-200 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer active:scale-95 shadow-md mt-2"
               >
                 {loading ? (
                   <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>

@@ -660,7 +660,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
           <form onSubmit={handleChangePassword} className="p-4 sm:p-5 rounded-xl barber-card space-y-3">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
               <Lock className="w-3.5 h-3.5 text-slate-400" />
-              <span>Alterar Senha do Painel (Atual: Ed5812)</span>
+              <span>Alterar Senha de Acesso</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -699,24 +699,6 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
           </form>
         </div>
       )}
-
-      {/* Footer Credits */}
-      <div className="pt-4 border-t border-[#1f242e] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
-        <span>Ed Barber Shop • Painel Administrativo</span>
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span>Desenvolvido por</span>
-          <a
-            href="https://sctechinova.com.br"
-            target="_blank"
-            rel="noreferrer"
-            className="text-slate-300 hover:text-white font-semibold transition underline underline-offset-2"
-          >
-            SCTECH (sctechinova.com.br)
-          </a>
-          <span>•</span>
-          <span>CNPJ: 59.070.203/0001-05</span>
-        </div>
-      </div>
 
     </div>
   );

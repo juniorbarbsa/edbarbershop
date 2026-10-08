@@ -246,22 +246,28 @@ router.post('/appointments', (req, res) => {
 // ADMIN ENDPOINTS
 // -------------------------------------------------------------
 
-// Admin Login
+// Admin Login (Requires Username/Email and Password)
 router.post('/admin/login', (req, res) => {
   try {
-    const { password } = req.body;
-    if (!password) {
-      return res.status(400).json({ error: 'A senha é obrigatória.' });
+    const { username, login, password } = req.body;
+    const userIdentifier = (username || login || '').trim().toLowerCase();
+
+    if (!userIdentifier || !password) {
+      return res.status(400).json({ error: 'Usuário e senha são obrigatórios.' });
     }
 
     const settings = db.getSettings();
-    const isMatch = bcrypt.compareSync(password, settings.adminPasswordHash);
+    const validUsername = (settings.adminUsername || 'ed').toLowerCase();
+    const validEmail = (settings.email || 'edalves8127@gmail.com').toLowerCase();
 
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Senha incorreta. Tente novamente.' });
+    const isUserValid = (userIdentifier === validUsername || userIdentifier === validEmail);
+    const isPassValid = bcrypt.compareSync(password, settings.adminPasswordHash);
+
+    if (!isUserValid || !isPassValid) {
+      return res.status(401).json({ error: 'Usuário ou senha incorretos. Verifique suas credenciais.' });
     }
 
-    const token = jwt.sign({ role: 'admin', shopName: settings.shopName }, JWT_SECRET, {
+    const token = jwt.sign({ role: 'admin', shopName: settings.shopName, user: validUsername }, JWT_SECRET, {
       expiresIn: '30d'
     });
 
