@@ -66,38 +66,29 @@ npm start
 
 ---
 
-## 🌐 Como Hospedar Gratuitamente (Passo a Passo)
+## 🌐 Hospedagem Gratuita no Render (100% Grátis)
 
-A aplicação foi configurada em arquitetura unificada (*Single Web Service*), o que permite rodar **100% grátis** no plano Free do **Render.com**, **Railway** ou **Koyeb**.
+O projeto já está sincronizado no GitHub oficial:
+👉 **[github.com/juniorbarbsa/ed-barber-shop](https://github.com/juniorbarbsa/ed-barber-shop)**
 
-### Opção Recomendada: Render.com (100% Gratuito)
+### 🚀 Publicação em 1 Clique no Render:
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/juniorbarbsa/ed-barber-shop)
 
-1. Crie uma conta gratuita em [render.com](https://render.com).
-2. Suba este projeto para um repositório no seu GitHub:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: ed barber shop booking system"
-   git branch -M main
-   git remote add origin https://github.com/SEU_USUARIO/ed-barber.git
-   git push -u origin main
-   ```
-3. No painel do Render:
-   - Clique em **New +** > **Web Service**.
-   - Conecte o repositório GitHub que você acabou de criar.
-   - Configure os campos:
-     - **Name**: `ed-barber-shop`
-     - **Runtime**: `Node`
-     - **Build Command**: `npm run install:all && npm run build`
-     - **Start Command**: `npm start`
-     - **Instance Type**: `Free`
-4. Clique em **Create Web Service**.
-5. Em poucos minutos seu sistema estará online com link HTTPS público gratuito (ex: `https://ed-barber-shop.onrender.com`).
+1. Acesse [render.com](https://render.com) e conecte com seu GitHub.
+2. Clique no botão acima ou vá em **New +** > **Blueprint** (ou **Web Service**).
+3. Selecione o repositório **juniorbarbsa/ed-barber-shop**.
+4. Como o arquivo `render.yaml` já está configurado na raiz com o plano gratuito (`plan: free`), o Render configurará tudo automaticamente:
+   - **Build Command**: `npm run build`
+   - **Start Command**: `npm start`
+   - **Plano**: `Free` (sem custos)
+5. Clique em **Apply** / **Deploy**. O sistema estará no ar em instantes com HTTPS e link público ativo.
 
 ---
 
-## 🔑 Credenciais Padrão
+## 🔑 Credenciais Administrativas do Barbeiro
 
-- **Acesso do Barbeiro**: Ícone de cadeado no menu superior ou rodapé.
-- **Senha Inicial**: `ed1999`
-- *Lembre-se de alterar o número do WhatsApp nas configurações do painel para o seu número real!*
+- **Acesso**: Ícone de cadeado no menu superior ou rodapé
+- **Usuário**: `ed` ou `edalves8127@gmail.com`
+- **Senha**: `Ed5812`
+- **WhatsApp do Ed**: `(73) 98116-4949`
+- **Créditos**: Desenvolvido por **SCTECH** (sctechinova.com.br) • CNPJ: 59.070.203/0001-05
