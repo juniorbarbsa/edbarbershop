@@ -237,42 +237,48 @@ export default function BookingModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-sm overflow-hidden">
       
       {/* Modal Dialog Box */}
-      <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl barber-card border border-[#2b3342] p-5 sm:p-7 shadow-2xl my-auto animate-fade-in text-slate-100">
+      <div className="relative w-full max-w-xl max-h-[93vh] sm:max-h-[90vh] flex flex-col rounded-t-3xl sm:rounded-2xl barber-card border border-[#2b3342] shadow-2xl animate-fade-in text-slate-100 overflow-hidden">
         
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.08] transition cursor-pointer z-10"
-          title="Fechar"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Modal Header */}
-        <div className="pb-4 mb-5 border-b border-[#1f242e] pr-8">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-500"></span>
-            <h2 className="text-lg sm:text-xl font-bold text-white font-['Outfit']">
-              Agendar Horário • Ed Barber Shop
-            </h2>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">
-            Rua Walter Hollenwerger, 119 - Antiga Batateira, Centro • Aberto todos os dias das 09h às 21h
-          </p>
-        </div>
-
-        {/* Offline Alert */}
-        {!isOnline && (
-          <div className="mb-6 p-4 rounded-xl barber-card border-amber-500/30 text-center space-y-2">
-            <h3 className="text-sm font-bold text-amber-300">Agendamentos Pausados</h3>
-            <p className="text-xs text-amber-200/80 max-w-md mx-auto">
-              {settings?.closedMessage || "O barbeiro está em pausa no momento. Você ainda pode chamar no WhatsApp."}
+        {/* Sticky Header with Mobile Handle & Close */}
+        <div className="shrink-0 bg-[#0e1117] border-b border-[#1f242e] px-4 sm:px-6 pt-3 pb-3 sm:py-4 flex items-center justify-between z-10">
+          <div className="pr-3">
+            {/* Mobile swipe/drag bar indicator */}
+            <div className="w-10 h-1 rounded-full bg-slate-700 mx-auto mb-2 sm:hidden"></div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+              <h2 className="text-base sm:text-lg font-bold text-white font-['Outfit'] leading-tight">
+                Agendar Horário • Ed Barber Shop
+              </h2>
+            </div>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">
+              Walter Hollenwerger, 119 - Centro • 09h às 21h todos os dias
             </p>
           </div>
-        )}
+
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl text-slate-400 hover:text-white bg-[#181c26] sm:bg-white/[0.05] hover:bg-white/[0.1] transition cursor-pointer shrink-0"
+            title="Fechar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable Modal Content */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 overscroll-contain safe-bottom">
+
+          {/* Offline Alert */}
+          {!isOnline && (
+            <div className="p-4 rounded-xl barber-card border-amber-500/30 text-center space-y-2">
+              <h3 className="text-sm font-bold text-amber-300">Agendamentos Pausados</h3>
+              <p className="text-xs text-amber-200/80 max-w-md mx-auto">
+                {settings?.closedMessage || "O barbeiro está em pausa no momento. Você ainda pode chamar no WhatsApp."}
+              </p>
+            </div>
+          )}
 
         {/* Success Modal / Clean Ticket View */}
         {bookingSuccess ? (
@@ -363,11 +369,11 @@ export default function BookingModal({
               </div>
 
               {/* Quick Day Shortcuts */}
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={() => { setSelectedDate(todayIso); setSelectedTime(null); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  className={`py-2 px-1 rounded-xl text-xs font-bold transition text-center cursor-pointer active:scale-95 ${
                     selectedDate === todayIso
                       ? 'bg-white text-slate-950 shadow'
                       : 'bg-[#181c26] text-slate-300 hover:bg-[#232834]'
@@ -379,7 +385,7 @@ export default function BookingModal({
                 <button
                   type="button"
                   onClick={() => { setSelectedDate(tomorrowIso); setSelectedTime(null); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  className={`py-2 px-1 rounded-xl text-xs font-bold transition text-center cursor-pointer active:scale-95 ${
                     selectedDate === tomorrowIso
                       ? 'bg-white text-slate-950 shadow'
                       : 'bg-[#181c26] text-slate-300 hover:bg-[#232834]'
@@ -391,13 +397,13 @@ export default function BookingModal({
                 <button
                   type="button"
                   onClick={() => { setSelectedDate(afterTomorrowIso); setSelectedTime(null); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  className={`py-2 px-1 rounded-xl text-xs font-bold transition text-center cursor-pointer active:scale-95 truncate ${
                     selectedDate === afterTomorrowIso
                       ? 'bg-white text-slate-950 shadow'
                       : 'bg-[#181c26] text-slate-300 hover:bg-[#232834]'
                   }`}
                 >
-                  Depois de amanhã
+                  Depois
                 </button>
               </div>
 
@@ -410,15 +416,15 @@ export default function BookingModal({
                   <div className="flex items-center gap-1">
                     <button
                       onClick={prevMonth}
-                      className="p-1 rounded hover:bg-[#232834] text-slate-400 hover:text-white transition cursor-pointer"
+                      className="p-1.5 rounded-lg hover:bg-[#232834] text-slate-400 hover:text-white transition cursor-pointer active:scale-95"
                     >
-                      <ChevronLeft className="w-3.5 h-3.5" />
+                      <ChevronLeft className="w-4 h-4" />
                     </button>
                     <button
                       onClick={nextMonth}
-                      className="p-1 rounded hover:bg-[#232834] text-slate-400 hover:text-white transition cursor-pointer"
+                      className="p-1.5 rounded-lg hover:bg-[#232834] text-slate-400 hover:text-white transition cursor-pointer active:scale-95"
                     >
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -430,7 +436,7 @@ export default function BookingModal({
                     </div>
                   ))}
                   {Array.from({ length: firstDayOfWeek }).map((_, i) => (
-                    <div key={`empty-${i}`} className="h-7"></div>
+                    <div key={`empty-${i}`} className="h-9 sm:h-8"></div>
                   ))}
                   {Array.from({ length: totalDays }).map((_, i) => {
                     const dayNum = i + 1;
@@ -442,7 +448,7 @@ export default function BookingModal({
                         key={`day-${dayNum}`}
                         disabled={isPast}
                         onClick={() => handleDateSelect(dayNum)}
-                        className={`h-7 rounded text-xs font-semibold transition flex items-center justify-center cursor-pointer ${
+                        className={`h-9 sm:h-8 rounded-lg text-xs font-semibold transition flex items-center justify-center cursor-pointer active:scale-95 ${
                           selected
                             ? 'bg-white text-slate-950 font-bold shadow'
                             : isPast
@@ -631,7 +637,7 @@ export default function BookingModal({
                       placeholder="Ex: João Silva"
                       value={clientName}
                       onChange={(e) => setClientName(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg barber-input text-xs"
+                      className="w-full px-3.5 py-3 sm:py-2.5 rounded-xl barber-input text-base sm:text-xs placeholder:text-slate-500"
                     />
                   </div>
 
@@ -640,12 +646,13 @@ export default function BookingModal({
                       WhatsApp com DDD *
                     </label>
                     <input
-                      type="text"
+                      type="tel"
+                      inputMode="numeric"
                       required
                       placeholder="(73) 98116-4949"
                       value={clientPhone}
                       onChange={handlePhoneChange}
-                      className="w-full px-3 py-2 rounded-lg barber-input text-xs"
+                      className="w-full px-3.5 py-3 sm:py-2.5 rounded-xl barber-input text-base sm:text-xs placeholder:text-slate-500"
                     />
                   </div>
                 </div>
@@ -659,12 +666,12 @@ export default function BookingModal({
                     placeholder="Ex: Corte, Barba, Completo, Degradê"
                     value={serviceNote}
                     onChange={(e) => setServiceNote(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg barber-input text-xs"
+                    className="w-full px-3.5 py-3 sm:py-2.5 rounded-xl barber-input text-base sm:text-xs placeholder:text-slate-500"
                   />
                 </div>
 
                 {/* Resumo do Horário Selecionado */}
-                <div className="p-3 rounded-lg bg-[#14171f] border border-[#232834] flex items-center justify-between text-xs">
+                <div className="p-3 rounded-xl bg-[#14171f] border border-[#232834] flex items-center justify-between text-xs">
                   <div>
                     <span className="text-slate-400">Data: </span>
                     <strong className="text-white">{selectedDate.split('-').reverse().join('/')}</strong>
@@ -681,10 +688,10 @@ export default function BookingModal({
                 <button
                   type="submit"
                   disabled={submitting || !isOnline || !selectedTime}
-                  className={`w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer ${
+                  className={`w-full py-3.5 sm:py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer shadow-lg active:scale-[0.98] ${
                     !selectedTime
                       ? 'bg-[#181c26] text-slate-500 cursor-not-allowed'
-                      : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow active:scale-95'
+                      : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/30'
                   }`}
                 >
                   {submitting ? (
@@ -702,6 +709,8 @@ export default function BookingModal({
 
           </div>
         )}
+
+        </div>
 
       </div>
     </div>

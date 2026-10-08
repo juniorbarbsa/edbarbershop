@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Calendar, MessageCircle } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import BookingModal from './components/BookingModal';
@@ -57,7 +58,7 @@ export default function App() {
         </div>
       </div>
 
-      <div className="relative flex flex-col min-h-screen">
+      <div className="relative flex flex-col min-h-screen pb-20 md:pb-0">
         {/* Navigation */}
         <Navbar
           settings={settings}
@@ -92,6 +93,28 @@ export default function App() {
           onClose={() => setIsAdminOpen(false)}
           onSettingsUpdated={handleSettingsUpdated}
         />
+
+        {/* Mobile Floating Action Bar */}
+        {!isBookingOpen && !isAdminOpen && (
+          <div className="fixed bottom-0 left-0 right-0 z-30 p-2.5 sm:p-3 bg-[#0c0e12]/95 border-t border-[#1f242e] backdrop-blur-md md:hidden flex items-center gap-2 safe-bottom shadow-2xl">
+            <button
+              onClick={() => setIsBookingOpen(true)}
+              className="flex-1 py-3 px-4 rounded-xl bg-white text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md active:scale-95 transition cursor-pointer"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Agendar Horário</span>
+            </button>
+            <a
+              href="https://api.whatsapp.com/send?phone=5573981164949"
+              target="_blank"
+              rel="noreferrer"
+              className="p-3 rounded-xl bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center active:scale-95 transition cursor-pointer"
+              title="Falar no WhatsApp"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </a>
+          </div>
+        )}
       </div>
 
     </div>

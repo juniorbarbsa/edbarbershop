@@ -85,7 +85,7 @@ export default function Hero({ settings, onScrollToBooking }) {
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
               <button
                 onClick={onScrollToBooking}
-                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-white text-slate-950 hover:bg-slate-200 font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer shadow active:scale-95"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white text-slate-950 hover:bg-slate-200 font-bold text-xs sm:text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-[0.98]"
               >
                 <Calendar className="w-4 h-4" />
                 <span>Agendar Meu Horário</span>
@@ -94,7 +94,7 @@ export default function Hero({ settings, onScrollToBooking }) {
 
               <button
                 onClick={handleWhatsAppDirect}
-                className="w-full sm:w-auto px-5 py-3 rounded-lg barber-card hover:border-[#3b4356] text-slate-300 hover:text-white font-semibold text-xs transition flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto px-5 py-3.5 rounded-xl barber-card hover:border-[#3b4356] text-slate-300 hover:text-white font-semibold text-xs transition flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
               >
                 <MessageCircle className="w-4 h-4 text-emerald-400" />
                 <span>WhatsApp (73) 98116-4949</span>
@@ -106,14 +106,14 @@ export default function Hero({ settings, onScrollToBooking }) {
           {/* Right Column: Physical Wall Emblem Display */}
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative w-full max-w-sm">
-              <div className="p-6 sm:p-7 rounded-2xl barber-card flex flex-col items-center text-center">
+              <div className="p-5 sm:p-7 rounded-2xl barber-card flex flex-col items-center text-center">
                 
                 {/* The Logo */}
                 <div className="py-2">
                   <img
                     src="/logo.png"
                     alt="Ed Barber Shop"
-                    className="w-52 h-52 sm:w-56 sm:h-56 object-contain"
+                    className="w-40 h-40 sm:w-56 sm:h-56 object-contain drop-shadow-md"
                   />
                 </div>
 

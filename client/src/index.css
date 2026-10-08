@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
 @layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: #0c0e12;
     color: #e5e7eb;
@@ -13,6 +19,14 @@
     font-family: 'Outfit', sans-serif;
     letter-spacing: -0.02em;
   }
+
+  button, a, input, select {
+    touch-action: manipulation;
+  }
+}
+
+.safe-bottom {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 /* Authentic Barber Pole Stripe Top Accent */

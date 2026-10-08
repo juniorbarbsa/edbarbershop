@@ -274,34 +274,34 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
       )}
 
       {/* Clean Metrics: Only Agendamentos Count (Zero Money / Zero R$) */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="p-4 rounded-xl barber-card text-center space-y-0.5">
-          <p className="text-[11px] text-slate-400 font-medium">Agendamentos Hoje</p>
-          <p className="text-xl sm:text-2xl font-black text-white font-['Outfit']">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        <div className="p-2.5 sm:p-4 rounded-xl barber-card text-center space-y-0.5">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium truncate">Hoje</p>
+          <p className="text-lg sm:text-2xl font-black text-white font-['Outfit']">
             {todayCount}
           </p>
         </div>
 
-        <div className="p-4 rounded-xl barber-card text-center space-y-0.5">
-          <p className="text-[11px] text-slate-400 font-medium">Próximos Dias</p>
-          <p className="text-xl sm:text-2xl font-black text-slate-300 font-['Outfit']">
+        <div className="p-2.5 sm:p-4 rounded-xl barber-card text-center space-y-0.5">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium truncate">Próximos</p>
+          <p className="text-lg sm:text-2xl font-black text-slate-300 font-['Outfit']">
             {upcomingCount}
           </p>
         </div>
 
-        <div className="p-4 rounded-xl barber-card text-center space-y-0.5">
-          <p className="text-[11px] text-slate-400 font-medium">Total Geral</p>
-          <p className="text-xl sm:text-2xl font-black text-slate-300 font-['Outfit']">
+        <div className="p-2.5 sm:p-4 rounded-xl barber-card text-center space-y-0.5">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium truncate">Total</p>
+          <p className="text-lg sm:text-2xl font-black text-slate-300 font-['Outfit']">
             {appointmentsList.length}
           </p>
         </div>
       </div>
 
       {/* Simple Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#1f242e] pb-3">
+      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-[#1f242e] pb-3 overflow-x-auto">
         <button
           onClick={() => setActiveTab('appointments')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 ${
             activeTab === 'appointments'
               ? 'bg-white text-slate-950 shadow'
               : 'text-slate-400 hover:text-white'
@@ -313,7 +313,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
 
         <button
           onClick={() => setActiveTab('blocks')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 ${
             activeTab === 'blocks'
               ? 'bg-white text-slate-950 shadow'
               : 'text-slate-400 hover:text-white'
@@ -325,7 +325,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
 
         <button
           onClick={() => setActiveTab('settings')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 ${
             activeTab === 'settings'
               ? 'bg-white text-slate-950 shadow'
               : 'text-slate-400 hover:text-white'
@@ -341,11 +341,11 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
         <div className="space-y-4">
           
           {/* Subfilters */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 bg-[#10131a] p-1 rounded-lg border border-[#1f242e]">
+          <div className="flex items-center justify-between gap-2 overflow-x-auto">
+            <div className="flex items-center gap-1 bg-[#10131a] p-1 rounded-lg border border-[#1f242e] shrink-0">
               <button
                 onClick={() => setAppointmentFilter('today')}
-                className={`px-3 py-1 rounded-md text-xs font-bold transition cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer ${
                   appointmentFilter === 'today'
                     ? 'bg-white text-slate-950 shadow'
                     : 'text-slate-400 hover:text-white'
@@ -355,7 +355,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
               </button>
               <button
                 onClick={() => setAppointmentFilter('upcoming')}
-                className={`px-3 py-1 rounded-md text-xs font-bold transition cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer ${
                   appointmentFilter === 'upcoming'
                     ? 'bg-white text-slate-950 shadow'
                     : 'text-slate-400 hover:text-white'
@@ -365,7 +365,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
               </button>
               <button
                 onClick={() => setAppointmentFilter('all')}
-                className={`px-3 py-1 rounded-md text-xs font-bold transition cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer ${
                   appointmentFilter === 'all'
                     ? 'bg-white text-slate-950 shadow'
                     : 'text-slate-400 hover:text-white'
@@ -377,7 +377,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
 
             <button
               onClick={loadData}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1 text-xs"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1 text-xs shrink-0"
               title="Atualizar lista"
             >
               <RefreshCw className="w-3.5 h-3.5" />
@@ -401,24 +401,24 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
                 return (
                   <div
                     key={apt.id}
-                    className="p-4 rounded-xl barber-card flex flex-col md:flex-row items-start md:items-center justify-between gap-3"
+                    className="p-3.5 sm:p-4 rounded-xl barber-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
                   >
                     {/* Time & Client info */}
-                    <div className="flex items-start gap-3">
-                      <div className="px-3 py-2 rounded-lg bg-[#1a202c] border border-[#2d3748] text-center shrink-0">
-                        <span className="text-base font-bold text-white block">
+                    <div className="flex items-start gap-3 w-full sm:w-auto">
+                      <div className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-[#1a202c] border border-[#2d3748] text-center shrink-0">
+                        <span className="text-sm sm:text-base font-bold text-white block">
                           {apt.time}
                         </span>
-                        <span className="text-[10px] text-slate-400 block">
+                        <span className="text-[9px] sm:text-[10px] text-slate-400 block">
                           {apt.date.split('-').reverse().join('/')}
                         </span>
                       </div>
 
-                      <div className="space-y-0.5">
+                      <div className="space-y-0.5 flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h4 className="text-sm font-bold text-white">{apt.clientName}</h4>
+                          <h4 className="text-sm font-bold text-white truncate">{apt.clientName}</h4>
                           <span
-                            className={`px-2 py-0.2 rounded text-[10px] font-bold ${
+                            className={`px-2 py-0.2 rounded text-[10px] font-bold shrink-0 ${
                               isConfirmed
                                 ? 'bg-blue-500/20 text-blue-400'
                                 : isCompleted
@@ -452,13 +452,13 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-2 self-end md:self-center">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-[#1f242e]">
                       {/* WhatsApp direct talk */}
                       <a
                         href={`https://api.whatsapp.com/send?phone=${cleanPhone}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-emerald-500/30 cursor-pointer"
+                        className="flex-1 sm:flex-none justify-center px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-emerald-500/30 cursor-pointer active:scale-95"
                       >
                         <MessageSquare className="w-3.5 h-3.5" />
                         <span>WhatsApp</span>
@@ -468,7 +468,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
                       {!isCompleted && !isCancelled && (
                         <button
                           onClick={() => handleStatusChange(apt.id, 'completed')}
-                          className="px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-blue-500/30 cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-blue-500/30 cursor-pointer active:scale-95"
                           title="Marcar como atendido"
                         >
                           <Check className="w-3.5 h-3.5" />
@@ -480,7 +480,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
                       {!isCancelled && !isCompleted && (
                         <button
                           onClick={() => handleStatusChange(apt.id, 'cancelled')}
-                          className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-amber-600/30 text-amber-400 text-xs transition cursor-pointer"
+                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-amber-600/30 text-amber-400 text-xs transition cursor-pointer active:scale-95"
                           title="Cancelar agendamento"
                         >
                           <XCircle className="w-3.5 h-3.5" />
@@ -490,7 +490,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
                       {/* Excluir */}
                       <button
                         onClick={() => handleDeleteAppointment(apt.id)}
-                        className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 transition cursor-pointer"
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 transition cursor-pointer active:scale-95"
                         title="Excluir"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

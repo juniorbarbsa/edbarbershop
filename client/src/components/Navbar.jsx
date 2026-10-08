@@ -12,25 +12,25 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
       <div className="h-[2px] w-full barber-stripe-accent opacity-90"></div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           
           {/* Logo & Brand */}
           <div 
-            className="flex items-center gap-3.5 cursor-pointer group" 
+            className="flex items-center gap-2.5 sm:gap-3.5 cursor-pointer group" 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             <img 
               src="/logo.png" 
               alt="Ed Barber Shop" 
-              className="w-12 h-12 object-contain"
+              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
             />
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-bold tracking-tight text-white font-['Outfit']">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-base sm:text-xl font-bold tracking-tight text-white font-['Outfit']">
                   ED BARBER SHOP
                 </span>
               </div>
-              <p className="text-[10px] font-medium text-slate-400 tracking-wider uppercase">
+              <p className="text-[9px] sm:text-[10px] font-medium text-slate-400 tracking-wider uppercase">
                 Desde 1999 • Walter Hollenwerger, 119
               </p>
             </div>
@@ -89,7 +89,7 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
             {/* Barber Admin Access */}
             <button
               onClick={onOpenAdmin}
-              title="Acesso com Senha do Barbeiro"
+              title="Acesso Administrativo"
               className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition cursor-pointer"
             >
               <Lock className="w-4 h-4" />
@@ -100,14 +100,14 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={onOpenAdmin}
-              title="Acesso com Senha do Barbeiro"
-              className="p-2 rounded-lg text-slate-400 hover:text-white"
+              title="Acesso Administrativo"
+              className="p-2 rounded-xl bg-white/[0.04] text-slate-400 hover:text-white active:scale-95 transition cursor-pointer"
             >
               <Lock className="w-4 h-4" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-300 hover:text-white"
+              className="p-2 rounded-xl bg-white/[0.04] text-slate-300 hover:text-white active:scale-95 transition cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -117,12 +117,12 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
 
         {/* Mobile dropdown */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-[#1f242e] flex flex-col gap-3">
+          <div className="md:hidden py-4 border-t border-[#1f242e] flex flex-col gap-3 animate-fade-in">
             <div className="flex items-center justify-between pb-2 border-b border-[#1f242e]">
               <span className="text-xs text-slate-400">Status da barbearia:</span>
               {isOnline ? (
                 <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   Atendendo Agora
                 </span>
               ) : (
@@ -135,22 +135,24 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
 
             <button 
               onClick={() => { setMobileMenuOpen(false); onScrollToBooking(); }}
-              className="text-left text-sm py-1.5 text-slate-300"
+              className="text-left text-sm py-2 px-3 rounded-xl hover:bg-white/[0.04] text-slate-200 transition font-medium flex items-center justify-between cursor-pointer"
             >
-              Agendar Horário
+              <span>Agendar Horário</span>
+              <ArrowRight className="w-4 h-4 text-slate-500" />
             </button>
             <button 
               onClick={() => { setMobileMenuOpen(false); document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className="text-left text-sm py-1.5 text-slate-300"
+              className="text-left text-sm py-2 px-3 rounded-xl hover:bg-white/[0.04] text-slate-200 transition font-medium flex items-center justify-between cursor-pointer"
             >
-              Endereço & Horários
+              <span>Endereço & Horários</span>
+              <ArrowRight className="w-4 h-4 text-slate-500" />
             </button>
             
             <a
               href={`https://api.whatsapp.com/send?phone=${phone}`}
               target="_blank"
               rel="noreferrer"
-              className="text-left text-sm py-1.5 text-emerald-400 font-medium flex items-center gap-2"
+              className="text-left text-sm py-2 px-3 rounded-xl bg-emerald-950/30 border border-emerald-500/20 text-emerald-400 font-medium flex items-center gap-2"
             >
               <Phone className="w-4 h-4" />
               <span>(73) 98116-4949</span>
@@ -158,10 +160,10 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
 
             <button 
               onClick={() => { setMobileMenuOpen(false); onScrollToBooking(); }}
-              className="w-full py-2.5 mt-2 rounded-lg bg-white text-slate-950 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 mt-1 rounded-xl bg-white text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md active:scale-95"
             >
               <Scissors className="w-4 h-4" />
-              Agendar Horário
+              <span>Agendar Meu Horário</span>
             </button>
           </div>
         )}
