@@ -29,6 +29,27 @@ function cleanPhone(phone) {
   return phone.replace(/\D/g, '');
 }
 
+// Helper: convert text to Unicode Mathematical Sans-Serif Bold characters
+function toBold(text) {
+  if (!text) return '';
+  return text.split('').map(char => {
+    const code = char.charCodeAt(0);
+    // A-Z: 0x1D5D4
+    if (code >= 65 && code <= 90) {
+      return String.fromCodePoint(0x1D5D4 + (code - 65));
+    }
+    // a-z: 0x1D5EE
+    if (code >= 97 && code <= 122) {
+      return String.fromCodePoint(0x1D5EE + (code - 97));
+    }
+    // 0-9: 0x1D7EC
+    if (code >= 48 && code <= 57) {
+      return String.fromCodePoint(0x1D7EC + (code - 48));
+    }
+    return char;
+  }).join('');
+}
+
 // Helper: build WhatsApp URL with clean, standard message formatting
 function buildWhatsAppUrl(barberPhone, appointment, settings) {
   const cleanBarber = cleanPhone(barberPhone);
@@ -37,17 +58,20 @@ function buildWhatsAppUrl(barberPhone, appointment, settings) {
   const [year, month, day] = appointment.date.split('-');
   const formattedDate = `${day}/${month}/${year}`;
 
+  const shopTitle = settings?.shopName || 'Ed Barber Shop';
+  const barberName = settings?.barberName || 'Ed';
+
   const lines = [
-    `*Agendamento - ${settings.shopName}*`,
+    toBold(`Agendamento - ${shopTitle}`),
     ``,
-    `Olá ${settings.barberName}! Gostaria de confirmar meu horário agendado pelo site:`,
+    `Olá ${barberName}! Gostaria de confirmar meu horário agendado pelo site:`,
     ``,
-    `*Cliente:* ${appointment.clientName}`,
-    `*Data:* ${formattedDate}`,
-    `*Horário:* ${appointment.time}`,
-    appointment.serviceName ? `*Procedimento:* ${appointment.serviceName}` : null,
-    appointment.clientNotes ? `*Observação:* ${appointment.clientNotes}` : null,
-    `*WhatsApp:* ${appointment.clientPhone}`,
+    `${toBold('Cliente')}: ${appointment.clientName}`,
+    `${toBold('Data')}: ${formattedDate}`,
+    `${toBold('Horario')}: ${appointment.time}`,
+    appointment.serviceName ? `${toBold('Procedimento')}: ${appointment.serviceName}` : null,
+    appointment.clientNotes ? `${toBold('Observacao')}: ${appointment.clientNotes}` : null,
+    `${toBold('WhatsApp')}: ${appointment.clientPhone}`,
     ``,
     `Aguardo a confirmação. Obrigado!`
   ].filter(line => line !== null);
