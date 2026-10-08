@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #080a0f;
+    color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+/* Custom Barber Pole Stripe Animation */
+@keyframes barberStripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 56px 0;
+  }
+}
+
+.barber-stripe-accent {
+  background: repeating-linear-gradient(
+    -45deg,
+    #ef4444,
+    #ef4444 14px,
+    #ffffff 14px,
+    #ffffff 28px,
+    #2563eb 28px,
+    #2563eb 42px,
+    #ffffff 42px,
+    #ffffff 56px
+  );
+  background-size: 56px 56px;
+  animation: barberStripes 2.5s linear infinite;
+}
+
+/* Premium Glassmorphism Utility Classes */
+.glass-card {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+}
+
+.glass-card-interactive {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-interactive:hover {
+  background: rgba(30, 41, 59, 0.75);
+  border-color: rgba(239, 68, 68, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px 0 rgba(239, 68, 68, 0.12), 0 4px 12px 0 rgba(0, 0, 0, 0.5);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-input {
+  background: rgba(10, 15, 26, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+  background: rgba(15, 23, 42, 0.9);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #272f3d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ef4444;
+}

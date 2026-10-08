@@ -1,0 +1,27 @@
+{
+  "name": "ed-barber-system",
+  "version": "1.0.0",
+  "description": "Sistema moderno de agendamentos para a barbearia Ed Barber Shop (Desde 1999) com painel administrativo e integração WhatsApp",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "server": "node server/server.js",
+    "client": "npm run dev --prefix client",
+    "build": "npm run build --prefix client",
+    "dev": "concurrently \"npm run dev --prefix client\" \"node server/server.js\"",
+    "install:all": "npm install && npm install --prefix client"
+  },
+  "keywords": ["barbearia", "agendamento", "react", "node", "whatsapp", "glassmorphism"],
+  "author": "Ed Barber Shop",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
