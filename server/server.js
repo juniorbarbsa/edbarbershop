@@ -61,7 +61,10 @@ app.get('*', (req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+// Health check for Cloud Platforms (Render, Railway, etc.)
+app.get('/healthz', (req, res) => res.status(200).send('OK'));
+
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`💈 Servidor Ed Barber Shop rodando na porta ${PORT}`);
-  console.log(`👉 API disponível em: http://localhost:${PORT}/api/public-info`);
+  console.log(`👉 API disponível em: http://0.0.0.0:${PORT}/api/public-info`);
 });
