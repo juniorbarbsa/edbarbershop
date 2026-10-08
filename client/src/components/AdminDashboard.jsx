@@ -700,6 +700,24 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
         </div>
       )}
 
+      {/* Footer Credits */}
+      <div className="pt-4 border-t border-[#1f242e] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+        <span>Ed Barber Shop • Painel Administrativo</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span>Desenvolvido por</span>
+          <a
+            href="https://sctechinova.com.br"
+            target="_blank"
+            rel="noreferrer"
+            className="text-slate-300 hover:text-white font-semibold transition underline underline-offset-2"
+          >
+            SCTECH (sctechinova.com.br)
+          </a>
+          <span>•</span>
+          <span>CNPJ: 59.070.203/0001-05</span>
+        </div>
+      </div>
+
     </div>
   );
 }

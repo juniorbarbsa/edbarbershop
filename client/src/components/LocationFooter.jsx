@@ -117,10 +117,25 @@ export default function LocationFooter({ settings, onOpenAdmin }) {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 border-t border-[#1f242e] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-6 border-t border-[#1f242e] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
             © {currentYear} Ed Barber Shop • Todos os direitos reservados.
           </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-400">
+            <span>Desenvolvido por</span>
+            <a 
+              href="https://sctechinova.com.br" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="font-bold text-slate-200 hover:text-white transition underline underline-offset-4 decoration-slate-600 hover:decoration-white"
+            >
+              SCTECH (sctechinova.com.br)
+            </a>
+            <span className="text-slate-600">•</span>
+            <span className="text-slate-400">CNPJ: 59.070.203/0001-05</span>
+          </div>
+
           <button
             onClick={scrollToTop}
             className="text-slate-400 hover:text-white transition flex items-center gap-1 text-[11px] cursor-pointer"

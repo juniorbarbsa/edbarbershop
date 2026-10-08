@@ -106,7 +106,7 @@
       "durationMinutes": 35,
       "date": "2026-10-15",
       "time": "14:30",
-      "status": "confirmed",
+      "status": "completed",
       "id": "apt-1791436866351",
       "createdAt": "2026-10-08T05:21:06.351Z"
     },
@@ -120,7 +120,7 @@
       "durationMinutes": 35,
       "date": "2026-10-18",
       "time": "10:10",
-      "status": "confirmed",
+      "status": "completed",
       "id": "apt-1791439251253",
       "createdAt": "2026-10-08T06:00:51.253Z"
     }
