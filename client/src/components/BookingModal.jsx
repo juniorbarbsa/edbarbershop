@@ -28,13 +28,12 @@ export default function BookingModal({
   const isOnline = settings?.status === 'online';
 
   const DEFAULT_PROCEDURES = [
-    'Corte Clássico & Degradê',
-    'Barba Terapia com Toalha Quente',
-    'Combo VIP: Corte + Barba',
-    'Acabamento & Pezinho',
-    'Sobrancelha na Navalha',
-    'Pigmentação de Barba ou Cabelo',
-    'Platinado / Nevou',
+    'Corte & Barba',
+    'Corte',
+    'Barba',
+    'Pigmentação',
+    'Pintura',
+    'Sobrancelha',
     'Outro Procedimento'
   ];
 
@@ -62,7 +61,7 @@ export default function BookingModal({
   const [currentMonth, setCurrentMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [selectedDate, setSelectedDate] = useState(todayIso);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [selectedProcedure, setSelectedProcedure] = useState('Corte Clássico & Degradê');
+  const [selectedProcedure, setSelectedProcedure] = useState('Corte & Barba');
   const [customProcedure, setCustomProcedure] = useState('');
   const [serviceNote, setServiceNote] = useState('');
   
@@ -260,7 +259,7 @@ export default function BookingModal({
     setSelectedTime(null);
     setClientName('');
     setClientPhone('');
-    setSelectedProcedure(procedureOptions[0] || 'Corte Clássico & Degradê');
+    setSelectedProcedure(procedureOptions[0] || 'Corte & Barba');
     setCustomProcedure('');
     setServiceNote('');
   };

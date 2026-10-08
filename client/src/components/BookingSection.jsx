@@ -41,20 +41,19 @@ export default function BookingSection({
   const afterTomorrowIso = formatIsoDate(afterTomorrow);
 
   const DEFAULT_PROCEDURES = [
-    'Corte Clássico & Degradê',
-    'Barba Terapia com Toalha Quente',
-    'Combo VIP: Corte + Barba',
-    'Acabamento & Pezinho',
-    'Sobrancelha na Navalha',
-    'Pigmentação de Barba ou Cabelo',
-    'Platinado / Nevou',
+    'Corte & Barba',
+    'Corte',
+    'Barba',
+    'Pigmentação',
+    'Pintura',
+    'Sobrancelha',
     'Outro Procedimento'
   ];
 
   const [currentMonth, setCurrentMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [selectedDate, setSelectedDate] = useState(todayIso);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [selectedProcedure, setSelectedProcedure] = useState('Corte Clássico & Degradê');
+  const [selectedProcedure, setSelectedProcedure] = useState('Corte & Barba');
   const [customProcedure, setCustomProcedure] = useState('');
   const [serviceNote, setServiceNote] = useState('');
   
@@ -230,7 +229,7 @@ export default function BookingSection({
     setSelectedTime(null);
     setClientName('');
     setClientPhone('');
-    setSelectedProcedure('Corte Clássico & Degradê');
+    setSelectedProcedure('Corte & Barba');
     setCustomProcedure('');
     setServiceNote('');
   };

@@ -29,70 +29,57 @@
   "services": [
     {
       "id": "srv-1",
-      "name": "Corte Clássico & Degradê",
-      "description": "Corte na tesoura ou máquina com degradê impecável (fade), acabamento na lâmina e alinhamento.",
-      "price": 35,
-      "durationMinutes": 35,
+      "name": "Corte & Barba",
+      "description": "Corte de cabelo e barba completa.",
+      "price": null,
+      "durationMinutes": 45,
       "active": true,
-      "popular": true,
-      "badge": "Mais Pedido"
+      "popular": true
     },
     {
       "id": "srv-2",
-      "name": "Barba Terapia com Toalha Quente",
-      "description": "Design e alinhamento de barba, esfoliação facial, hidratação profunda com óleos essenciais e toalha quente.",
-      "price": 30,
-      "durationMinutes": 30,
+      "name": "Corte",
+      "description": "Corte de cabelo masculino e acabamento.",
+      "price": null,
+      "durationMinutes": 35,
       "active": true,
-      "popular": false,
-      "badge": "Relaxante"
+      "popular": true
     },
     {
       "id": "srv-3",
-      "name": "Combo VIP: Corte + Barba",
-      "description": "A experiência completa de transformação: corte degradê ou tradicional + barba terapia com toalha quente.",
-      "price": 60,
-      "durationMinutes": 60,
+      "name": "Barba",
+      "description": "Barba e desenho alinhado.",
+      "price": null,
+      "durationMinutes": 30,
       "active": true,
-      "popular": true,
-      "badge": "Melhor Custo/Benefício"
+      "popular": true
     },
     {
       "id": "srv-4",
-      "name": "Acabamento & Pezinho",
-      "description": "Alinhamento das linhas do cabelo, costeletas e nuca na navalha com loção pós-barba.",
-      "price": 15,
-      "durationMinutes": 15,
-      "active": true,
-      "popular": false
-    },
-    {
-      "id": "srv-5",
-      "name": "Sobrancelha na Navalha",
-      "description": "Desenho e limpeza precisa da sobrancelha na lâmina para harmonizar seu visual.",
-      "price": 15,
-      "durationMinutes": 15,
-      "active": true,
-      "popular": false
-    },
-    {
-      "id": "srv-6",
-      "name": "Pigmentação de Barba ou Cabelo",
-      "description": "Disfarce de falhas e fios brancos com efeito natural e duradouro.",
-      "price": 25,
+      "name": "Pigmentação",
+      "description": "Pigmentação de barba ou cabelo.",
+      "price": null,
       "durationMinutes": 25,
       "active": true,
       "popular": false
     },
     {
-      "id": "srv-7",
-      "name": "Platinado / Nevou",
-      "description": "Descoloração global com matização profissional para um tom platinado ou branco perfeito.",
-      "price": 110,
-      "durationMinutes": 120,
+      "id": "srv-5",
+      "name": "Pintura",
+      "description": "Pintura e coloração de cabelo ou barba.",
+      "price": null,
+      "durationMinutes": 35,
       "active": true,
-      "popular": false,
-      "badge": "Estilo Único"
+      "popular": false
+    },
+    {
+      "id": "srv-6",
+      "name": "Sobrancelha",
+      "description": "Alinhamento e limpeza de sobrancelha na lâmina.",
+      "price": null,
+      "durationMinutes": 15,
+      "active": true,
+      "popular": false
     }
   ],
   "appointments": [
