@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import BookingSection from './components/BookingSection';
+import BookingModal from './components/BookingModal';
 import LocationFooter from './components/LocationFooter';
 import AdminModal from './components/AdminModal';
 import { getPublicInfo } from './api';
 
 export default function App() {
   const [settings, setSettings] = useState(null);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -26,13 +27,6 @@ export default function App() {
   useEffect(() => {
     loadPublicData();
   }, []);
-
-  const handleScrollToBooking = () => {
-    const el = document.getElementById('agendar');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const handleSettingsUpdated = (updatedSettings) => {
     setSettings(updatedSettings);
@@ -68,25 +62,28 @@ export default function App() {
         <Navbar
           settings={settings}
           onOpenAdmin={() => setIsAdminOpen(true)}
-          onScrollToBooking={handleScrollToBooking}
+          onScrollToBooking={() => setIsBookingOpen(true)}
         />
 
         {/* Hero Section */}
         <Hero
           settings={settings}
-          onScrollToBooking={handleScrollToBooking}
-        />
-
-        {/* Direct & Intuitive Booking Flow */}
-        <BookingSection
-          settings={settings}
-          onAppointmentCreated={() => {}}
+          onScrollToBooking={() => setIsBookingOpen(true)}
         />
 
         {/* Location & Footer */}
         <LocationFooter
           settings={settings}
           onOpenAdmin={() => setIsAdminOpen(true)}
+          onOpenBooking={() => setIsBookingOpen(true)}
+        />
+
+        {/* Booking Wizard Modal */}
+        <BookingModal
+          isOpen={isBookingOpen}
+          onClose={() => setIsBookingOpen(false)}
+          settings={settings}
+          onAppointmentCreated={() => {}}
         />
 
         {/* Admin Password Modal & Dashboard */}

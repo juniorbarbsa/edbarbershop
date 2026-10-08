@@ -1,0 +1,695 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  X,
+  Calendar as CalendarIcon, 
+  Clock, 
+  User, 
+  Phone, 
+  CheckCircle2, 
+  AlertCircle, 
+  ChevronLeft, 
+  ChevronRight, 
+  MessageCircle, 
+  ArrowRight, 
+  RotateCcw,
+  Sun,
+  Sunset,
+  Moon
+} from 'lucide-react';
+import { getAvailableSlots, createAppointment } from '../api';
+
+export default function BookingModal({ 
+  isOpen, 
+  onClose, 
+  settings, 
+  onAppointmentCreated 
+}) {
+  const isOnline = settings?.status === 'online';
+
+  const today = new Date();
+  const formatIsoDate = (d) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const todayIso = formatIsoDate(today);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const tomorrowIso = formatIsoDate(tomorrow);
+
+  const afterTomorrow = new Date(today);
+  afterTomorrow.setDate(today.getDate() + 2);
+  const afterTomorrowIso = formatIsoDate(afterTomorrow);
+
+  const [currentMonth, setCurrentMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
+  const [selectedDate, setSelectedDate] = useState(todayIso);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [serviceNote, setServiceNote] = useState('');
+  
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [slotsData, setSlotsData] = useState({ slots: [], isWorkDay: true, isBlocked: false });
+  const [errorMsg, setErrorMsg] = useState('');
+
+  // Client form
+  const [clientName, setClientName] = useState('');
+  const [clientPhone, setClientPhone] = useState('');
+
+  // Submit states
+  const [submitting, setSubmitting] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(null);
+
+  // Reset when opening
+  useEffect(() => {
+    if (isOpen) {
+      setErrorMsg('');
+      if (!bookingSuccess) {
+        setSelectedDate(todayIso);
+      }
+    }
+  }, [isOpen]);
+
+  // Phone mask
+  const handlePhoneChange = (e) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 11) val = val.slice(0, 11);
+    
+    if (val.length > 10) {
+      val = val.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else if (val.length > 6) {
+      val = val.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    } else if (val.length > 2) {
+      val = val.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+    }
+    setClientPhone(val);
+  };
+
+  // Fetch slots whenever selectedDate changes
+  useEffect(() => {
+    if (!selectedDate || !isOpen) return;
+    
+    let isMounted = true;
+    setSlotsLoading(true);
+    setErrorMsg('');
+    setSelectedTime(null);
+
+    getAvailableSlots(selectedDate)
+      .then((data) => {
+        if (isMounted) {
+          setSlotsData(data);
+          setSlotsLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setErrorMsg(err.message || 'Erro ao carregar horários');
+          setSlotsLoading(false);
+        }
+      });
+
+    return () => { isMounted = false; };
+  }, [selectedDate, isOpen]);
+
+  if (!isOpen) return null;
+
+  // Calendar calculations
+  const monthNames = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+  const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+  const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+  const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
+
+  const currentYear = currentMonth.getFullYear();
+  const currentMonthIdx = currentMonth.getMonth();
+  const totalDays = getDaysInMonth(currentYear, currentMonthIdx);
+  const firstDayOfWeek = getFirstDayOfMonth(currentYear, currentMonthIdx);
+
+  const prevMonth = () => {
+    const prev = new Date(currentYear, currentMonthIdx - 1, 1);
+    if (prev.getMonth() < today.getMonth() && prev.getFullYear() <= today.getFullYear()) return;
+    setCurrentMonth(prev);
+  };
+
+  const nextMonth = () => {
+    const next = new Date(currentYear, currentMonthIdx + 1, 1);
+    setCurrentMonth(next);
+  };
+
+  const handleDateSelect = (dayNum) => {
+    const selected = new Date(currentYear, currentMonthIdx, dayNum);
+    const todayAtZero = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    if (selected < todayAtZero) return;
+    setSelectedDate(formatIsoDate(selected));
+    setSelectedTime(null);
+  };
+
+  const isDayPast = (dayNum) => {
+    const d = new Date(currentYear, currentMonthIdx, dayNum);
+    const todayAtZero = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    return d < todayAtZero;
+  };
+
+  const isDaySelected = (dayNum) => {
+    const target = formatIsoDate(new Date(currentYear, currentMonthIdx, dayNum));
+    return target === selectedDate;
+  };
+
+  // Group slots by period
+  const morningSlots = (slotsData.slots || []).filter(s => {
+    const h = parseInt(s.time.split(':')[0], 10);
+    return h < 13;
+  });
+
+  const afternoonSlots = (slotsData.slots || []).filter(s => {
+    const h = parseInt(s.time.split(':')[0], 10);
+    return h >= 14 && h < 18;
+  });
+
+  const eveningSlots = (slotsData.slots || []).filter(s => {
+    const h = parseInt(s.time.split(':')[0], 10);
+    return h >= 18;
+  });
+
+  const handleConfirmAppointment = async (e) => {
+    e.preventDefault();
+    if (!isOnline) {
+      setErrorMsg('O barbeiro não está atendendo no momento.');
+      return;
+    }
+    if (!selectedDate) {
+      setErrorMsg('Por favor, selecione um dia.');
+      return;
+    }
+    if (!selectedTime) {
+      setErrorMsg('Por favor, selecione um horário disponível.');
+      return;
+    }
+    if (!clientName.trim()) {
+      setErrorMsg('Por favor, digite seu nome.');
+      return;
+    }
+    if (!clientPhone.replace(/\D/g, '') || clientPhone.replace(/\D/g, '').length < 10) {
+      setErrorMsg('Por favor, informe seu WhatsApp com DDD.');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      setErrorMsg('');
+
+      const result = await createAppointment({
+        clientName,
+        clientPhone,
+        clientNotes: serviceNote ? serviceNote.trim() : '',
+        serviceName: serviceNote ? serviceNote.trim() : 'Corte / Barba',
+        date: selectedDate,
+        time: selectedTime
+      });
+
+      setBookingSuccess(result);
+      if (onAppointmentCreated) onAppointmentCreated(result.appointment);
+
+      if (result.whatsappRedirectUrl) {
+        window.open(result.whatsappRedirectUrl, '_blank');
+      }
+    } catch (err) {
+      setErrorMsg(err.message || 'Erro ao realizar o agendamento.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleResetBooking = () => {
+    setBookingSuccess(null);
+    setSelectedTime(null);
+    setClientName('');
+    setClientPhone('');
+    setServiceNote('');
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm overflow-y-auto">
+      
+      {/* Modal Dialog Box */}
+      <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl barber-card border border-[#2b3342] p-5 sm:p-7 shadow-2xl my-auto animate-fade-in text-slate-100">
+        
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.08] transition cursor-pointer z-10"
+          title="Fechar"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Modal Header */}
+        <div className="pb-4 mb-5 border-b border-[#1f242e] pr-8">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500"></span>
+            <h2 className="text-lg sm:text-xl font-bold text-white font-['Outfit']">
+              Agendar Horário • Ed Barber Shop
+            </h2>
+          </div>
+          <p className="text-[11px] text-slate-400 mt-0.5">
+            Rua Walter Hollenwerger, 119 - Antiga Batateira, Centro • Aberto todos os dias das 09h às 21h
+          </p>
+        </div>
+
+        {/* Offline Alert */}
+        {!isOnline && (
+          <div className="mb-6 p-4 rounded-xl barber-card border-amber-500/30 text-center space-y-2">
+            <h3 className="text-sm font-bold text-amber-300">Agendamentos Pausados</h3>
+            <p className="text-xs text-amber-200/80 max-w-md mx-auto">
+              {settings?.closedMessage || "O barbeiro está em pausa no momento. Você ainda pode chamar no WhatsApp."}
+            </p>
+          </div>
+        )}
+
+        {/* Success Modal / Clean Ticket View */}
+        {bookingSuccess ? (
+          <div className="p-4 sm:p-6 text-center space-y-5 animate-fade-in">
+            <div className="w-12 h-12 mx-auto rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <CheckCircle2 className="w-7 h-7" />
+            </div>
+
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">
+                Horário Reservado
+              </span>
+              <h3 className="text-xl font-bold text-white font-['Outfit'] mt-1">
+                Agendamento Concluído!
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Seu horário foi salvo na agenda do Ed.
+              </p>
+            </div>
+
+            {/* Clean Ticket Card */}
+            <div className="p-4 rounded-xl bg-[#0d1015] border border-[#232834] text-left space-y-2 text-xs text-slate-300">
+              <div className="flex justify-between pb-1.5 border-b border-[#1f242e]">
+                <span className="text-slate-400">Cliente:</span>
+                <span className="text-white font-semibold">{bookingSuccess.appointment.clientName}</span>
+              </div>
+              <div className="flex justify-between pb-1.5 border-b border-[#1f242e]">
+                <span className="text-slate-400">Data & Horário:</span>
+                <span className="text-emerald-400 font-bold">
+                  {bookingSuccess.appointment.date.split('-').reverse().join('/')} às {bookingSuccess.appointment.time}
+                </span>
+              </div>
+              {bookingSuccess.appointment.clientNotes && (
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Procedimento:</span>
+                  <span className="text-slate-200">{bookingSuccess.appointment.clientNotes}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="space-y-2 pt-2">
+              <a
+                href={bookingSuccess.whatsappRedirectUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer shadow-md"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Abrir WhatsApp do Ed para Confirmar</span>
+              </a>
+
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  onClick={handleResetBooking}
+                  className="w-1/2 py-2.5 rounded-lg bg-[#181c26] text-xs text-slate-300 hover:text-white transition flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Novo Horário</span>
+                </button>
+                <button
+                  onClick={onClose}
+                  className="w-1/2 py-2.5 rounded-lg bg-white text-slate-950 font-bold text-xs transition flex items-center justify-center cursor-pointer"
+                >
+                  <span>Concluir</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Intuitive 3-Step Wizard Inside Modal */
+          <div className="space-y-5">
+            
+            {/* ETAPA 1: ESCOLHA O DIA */}
+            <div className="p-4 sm:p-5 rounded-xl bg-[#0e1117] border border-[#1f242e] space-y-3">
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#1f242e]">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-white text-slate-950 text-xs font-black flex items-center justify-center">
+                    1
+                  </span>
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                    Escolha o Dia
+                  </h3>
+                </div>
+                <span className="text-xs font-bold text-white">
+                  {selectedDate.split('-').reverse().join('/')}
+                </span>
+              </div>
+
+              {/* Quick Day Shortcuts */}
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setSelectedDate(todayIso); setSelectedTime(null); }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    selectedDate === todayIso
+                      ? 'bg-white text-slate-950 shadow'
+                      : 'bg-[#181c26] text-slate-300 hover:bg-[#232834]'
+                  }`}
+                >
+                  Hoje
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setSelectedDate(tomorrowIso); setSelectedTime(null); }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    selectedDate === tomorrowIso
+                      ? 'bg-white text-slate-950 shadow'
+                      : 'bg-[#181c26] text-slate-300 hover:bg-[#232834]'
+                  }`}
+                >
+                  Amanhã
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setSelectedDate(afterTomorrowIso); setSelectedTime(null); }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    selectedDate === afterTomorrowIso
+                      ? 'bg-white text-slate-950 shadow'
+                      : 'bg-[#181c26] text-slate-300 hover:bg-[#232834]'
+                  }`}
+                >
+                  Depois de amanhã
+                </button>
+              </div>
+
+              {/* Month Header & Days Grid */}
+              <div className="pt-1">
+                <div className="flex items-center justify-between mb-2 text-xs text-slate-300">
+                  <span className="font-semibold">
+                    {monthNames[currentMonthIdx]} de {currentYear}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={prevMonth}
+                      className="p-1 rounded hover:bg-[#232834] text-slate-400 hover:text-white transition cursor-pointer"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={nextMonth}
+                      className="p-1 rounded hover:bg-[#232834] text-slate-400 hover:text-white transition cursor-pointer"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-7 gap-1 text-center">
+                  {dayNames.map((d, i) => (
+                    <div key={i} className="text-[10px] font-bold text-slate-500 py-1 uppercase">
+                      {d}
+                    </div>
+                  ))}
+                  {Array.from({ length: firstDayOfWeek }).map((_, i) => (
+                    <div key={`empty-${i}`} className="h-7"></div>
+                  ))}
+                  {Array.from({ length: totalDays }).map((_, i) => {
+                    const dayNum = i + 1;
+                    const isPast = isDayPast(dayNum);
+                    const selected = isDaySelected(dayNum);
+
+                    return (
+                      <button
+                        key={`day-${dayNum}`}
+                        disabled={isPast}
+                        onClick={() => handleDateSelect(dayNum)}
+                        className={`h-7 rounded text-xs font-semibold transition flex items-center justify-center cursor-pointer ${
+                          selected
+                            ? 'bg-white text-slate-950 font-bold shadow'
+                            : isPast
+                            ? 'opacity-20 text-slate-600 cursor-not-allowed'
+                            : 'text-slate-300 hover:bg-[#232834] hover:text-white'
+                        }`}
+                      >
+                        {dayNum}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* ETAPA 2: ESCOLHA O HORÁRIO */}
+            <div className="p-4 sm:p-5 rounded-xl bg-[#0e1117] border border-[#1f242e] space-y-3">
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#1f242e]">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-white text-slate-950 text-xs font-black flex items-center justify-center">
+                    2
+                  </span>
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                    Escolha o Horário
+                  </h3>
+                </div>
+                {selectedTime ? (
+                  <span className="text-xs font-bold text-emerald-400">
+                    Selecionado: {selectedTime}
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-slate-400">
+                    Toque no horário
+                  </span>
+                )}
+              </div>
+
+              {slotsLoading ? (
+                <div className="py-6 text-center text-slate-400 text-xs flex items-center justify-center gap-2">
+                  <div className="w-3.5 h-3.5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
+                  <span>Consultando horários...</span>
+                </div>
+              ) : slotsData.isBlocked ? (
+                <div className="py-4 text-center text-slate-400 text-xs bg-[#0f1217] rounded-lg">
+                  Esta data está bloqueada para agendamentos.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {/* Manhã */}
+                  {morningSlots.length > 0 && (
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-slate-400">
+                        <Sun className="w-3 h-3 text-amber-400" />
+                        <span>Manhã</span>
+                      </div>
+                      <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+                        {morningSlots.map((slot) => {
+                          const isSelected = selectedTime === slot.time;
+                          return (
+                            <button
+                              key={slot.time}
+                              type="button"
+                              disabled={!slot.available}
+                              onClick={() => setSelectedTime(slot.time)}
+                              className={`py-1.5 px-1 rounded-md text-xs font-semibold transition flex flex-col items-center justify-center cursor-pointer ${
+                                isSelected
+                                  ? 'bg-white text-slate-950 font-bold shadow'
+                                  : !slot.available
+                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-30'
+                                  : 'bg-[#181c26] text-slate-200 hover:bg-[#232834]'
+                              }`}
+                            >
+                              <span>{slot.time}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tarde */}
+                  {afternoonSlots.length > 0 && (
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-slate-400">
+                        <Sunset className="w-3 h-3 text-orange-400" />
+                        <span>Tarde</span>
+                      </div>
+                      <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+                        {afternoonSlots.map((slot) => {
+                          const isSelected = selectedTime === slot.time;
+                          return (
+                            <button
+                              key={slot.time}
+                              type="button"
+                              disabled={!slot.available}
+                              onClick={() => setSelectedTime(slot.time)}
+                              className={`py-1.5 px-1 rounded-md text-xs font-semibold transition flex flex-col items-center justify-center cursor-pointer ${
+                                isSelected
+                                  ? 'bg-white text-slate-950 font-bold shadow'
+                                  : !slot.available
+                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-30'
+                                  : 'bg-[#181c26] text-slate-200 hover:bg-[#232834]'
+                              }`}
+                            >
+                              <span>{slot.time}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Noite */}
+                  {eveningSlots.length > 0 && (
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-slate-400">
+                        <Moon className="w-3 h-3 text-blue-400" />
+                        <span>Noite</span>
+                      </div>
+                      <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+                        {eveningSlots.map((slot) => {
+                          const isSelected = selectedTime === slot.time;
+                          return (
+                            <button
+                              key={slot.time}
+                              type="button"
+                              disabled={!slot.available}
+                              onClick={() => setSelectedTime(slot.time)}
+                              className={`py-1.5 px-1 rounded-md text-xs font-semibold transition flex flex-col items-center justify-center cursor-pointer ${
+                                isSelected
+                                  ? 'bg-white text-slate-950 font-bold shadow'
+                                  : !slot.available
+                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-30'
+                                  : 'bg-[#181c26] text-slate-200 hover:bg-[#232834]'
+                              }`}
+                            >
+                              <span>{slot.time}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* ETAPA 3: SEUS DADOS & CONFIRMAÇÃO */}
+            <div className="p-4 sm:p-5 rounded-xl bg-[#0e1117] border border-[#1f242e] space-y-3">
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#1f242e]">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-white text-slate-950 text-xs font-black flex items-center justify-center">
+                    3
+                  </span>
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                    Seus Dados
+                  </h3>
+                </div>
+              </div>
+
+              {errorMsg && (
+                <div className="p-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleConfirmAppointment} className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div>
+                    <label className="text-[11px] font-medium text-slate-300 block mb-1">
+                      Seu Nome *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ex: João Silva"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg barber-input text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-slate-300 block mb-1">
+                      WhatsApp com DDD *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="(73) 98116-4949"
+                      value={clientPhone}
+                      onChange={handlePhoneChange}
+                      className="w-full px-3 py-2 rounded-lg barber-input text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-slate-300 block mb-1">
+                    O que pretende fazer? (Opcional)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Corte, Barba, Completo, Degradê"
+                    value={serviceNote}
+                    onChange={(e) => setServiceNote(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg barber-input text-xs"
+                  />
+                </div>
+
+                {/* Resumo do Horário Selecionado */}
+                <div className="p-3 rounded-lg bg-[#14171f] border border-[#232834] flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-slate-400">Data: </span>
+                    <strong className="text-white">{selectedDate.split('-').reverse().join('/')}</strong>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Horário: </span>
+                    <strong className="text-emerald-400 font-bold">
+                      {selectedTime ? selectedTime : 'Selecione no passo 2'}
+                    </strong>
+                  </div>
+                </div>
+
+                {/* Botão de Finalização */}
+                <button
+                  type="submit"
+                  disabled={submitting || !isOnline || !selectedTime}
+                  className={`w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer ${
+                    !selectedTime
+                      ? 'bg-[#181c26] text-slate-500 cursor-not-allowed'
+                      : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow active:scale-95'
+                  }`}
+                >
+                  {submitting ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Confirmar & Abrir no WhatsApp do Ed</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
