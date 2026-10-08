@@ -10,40 +10,40 @@ export default function ServicesSection({ services, onSelectService }) {
   };
 
   return (
-    <section id="servicos" className="py-16 sm:py-24 relative border-t border-white/[0.04]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="servicos" className="py-14 sm:py-20 border-b border-[#1f242e]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-xl mx-auto mb-12 space-y-2">
-          <span className="text-[11px] font-bold tracking-widest uppercase text-slate-400">
-            Tabela de Serviços
+        <div className="text-center max-w-xl mx-auto mb-10 space-y-1.5">
+          <span className="text-[11px] font-bold tracking-wider uppercase text-slate-400">
+            Tabela de Preços
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-['Outfit']">
-            Valores & Duração dos Atendimentos
+            Serviços & Procedimentos
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400">
-            Selecione o serviço desejado para visualizar os horários disponíveis e agendar.
+          <p className="text-xs text-slate-400">
+            Selecione o serviço para visualizar os horários disponíveis e reservar sua cadeira.
           </p>
         </div>
 
         {/* Grid of Services */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {services.map((service) => {
             return (
               <div
                 key={service.id}
-                className="group relative rounded-2xl p-6 glass-card-interactive flex flex-col justify-between"
+                className="barber-card-interactive rounded-xl p-5 flex flex-col justify-between"
               >
                 <div>
                   {/* Top Bar: Badge & Duration */}
                   <div className="flex items-center justify-between gap-2 mb-3">
                     {service.badge ? (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-white/[0.08] text-slate-200 border border-white/10">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-[#232834] text-slate-200">
                         {service.badge}
                       </span>
                     ) : (
                       <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
-                        Procedimento
+                        Atendimento
                       </span>
                     )}
 
@@ -54,30 +54,30 @@ export default function ServicesSection({ services, onSelectService }) {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors font-['Outfit'] mb-2">
+                  <h3 className="text-base font-bold text-white font-['Outfit'] mb-1.5">
                     {service.name}
                   </h3>
                   
                   {/* Description */}
-                  <p className="text-xs text-slate-400 leading-relaxed mb-6 font-normal">
+                  <p className="text-xs text-slate-400 leading-relaxed mb-5 font-normal">
                     {service.description}
                   </p>
                 </div>
 
                 {/* Bottom: Price & Button */}
-                <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
+                <div className="pt-3.5 border-t border-[#1f242e] flex items-center justify-between">
                   <div>
                     <span className="text-[10px] uppercase font-medium text-slate-400 block">
                       Valor
                     </span>
-                    <span className="text-xl font-bold text-white font-['Outfit']">
+                    <span className="text-lg font-bold text-white font-['Outfit']">
                       {formatPrice(service.price)}
                     </span>
                   </div>
 
                   <button
                     onClick={() => onSelectService(service)}
-                    className="px-3.5 py-2 rounded-xl bg-white/[0.06] group-hover:bg-white group-hover:text-slate-950 text-white text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white hover:text-slate-950 text-white text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <span>Agendar</span>
                     <ArrowRight className="w-3 h-3" />

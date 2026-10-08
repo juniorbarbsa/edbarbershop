@@ -2,16 +2,18 @@
   "settings": {
     "shopName": "Ed Barber Shop",
     "subtitle": "Desde 1999",
-    "barberName": "Ed Barber",
-    "whatsapp": "5511999999999",
+    "barberName": "Ed",
+    "email": "edalves8127@gmail.com",
+    "whatsapp": "5573981164949",
     "status": "online",
-    "statusMessage": "Atendendo normalmente hoje!",
-    "closedMessage": "No momento não estamos atendendo. Volte mais tarde ou envie uma mensagem no WhatsApp.",
-    "adminPasswordHash": "$2a$10$AmEhCFd7aXDkQDaCud9LMe7HliwoR0D8/nAHVjwh2JMBczXlqvcja",
+    "statusMessage": "Estamos atendendo! Escolha o melhor horário abaixo.",
+    "closedMessage": "No momento não estamos atendendo. Chame no WhatsApp para dúvidas.",
+    "adminPasswordHash": "$2a$10$oMCi/c.PcnT4FnLkMNwFkehVSAtREe8VTYHohQCIUpQ.Ita48BjGe",
     "openingHour": "09:00",
-    "closingHour": "19:30",
-    "slotDurationMinutes": 30,
+    "closingHour": "21:00",
+    "slotDurationMinutes": 35,
     "workDays": [
+      0,
       1,
       2,
       3,
@@ -19,10 +21,10 @@
       5,
       6
     ],
-    "lunchStart": "12:00",
-    "lunchEnd": "13:00",
-    "address": "Rua do Estilo, 1999 - Centro",
-    "instagram": "@edbarber1999"
+    "lunchStart": "13:00",
+    "lunchEnd": "14:00",
+    "address": "Rua Walter Hollenwerger, 119 - Antiga Batateira, Centro",
+    "instagram": "@edbarbershop"
   },
   "services": [
     {
@@ -95,20 +97,6 @@
   ],
   "appointments": [
     {
-      "id": "apt-demo-1",
-      "clientName": "Marcos Vinicius",
-      "clientPhone": "11988887777",
-      "clientNotes": "Degradê navalhado alto",
-      "serviceId": "srv-1",
-      "serviceName": "Corte Clássico & Degradê",
-      "price": 35,
-      "durationMinutes": 35,
-      "date": "2026-10-08",
-      "time": "10:30",
-      "status": "confirmed",
-      "createdAt": "2026-10-08T05:08:09.762Z"
-    },
-    {
       "clientName": "Carlos Eduardo",
       "clientPhone": "(11) 98765-4321",
       "clientNotes": "Corte degrad� baixo",
@@ -121,6 +109,20 @@
       "status": "confirmed",
       "id": "apt-1791436866351",
       "createdAt": "2026-10-08T05:21:06.351Z"
+    },
+    {
+      "clientName": "Lucas Santos",
+      "clientPhone": "(73) 98888-7777",
+      "clientNotes": "Corte degrad� navalhado",
+      "serviceId": "srv-1",
+      "serviceName": "Corte Clássico & Degradê",
+      "price": 35,
+      "durationMinutes": 35,
+      "date": "2026-10-18",
+      "time": "10:10",
+      "status": "confirmed",
+      "id": "apt-1791439251253",
+      "createdAt": "2026-10-08T06:00:51.253Z"
     }
   ],
   "blockedSlots": []

@@ -119,10 +119,10 @@ export default function AdminModal({ isOpen, onClose, onSettingsUpdated }) {
                   placeholder="Digite sua senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
+                  className="w-full px-3.5 py-2.5 rounded-lg barber-input text-xs"
                 />
                 <p className="text-[10px] text-slate-500 pt-1">
-                  Senha inicial: <strong className="text-slate-300">ed1999</strong>
+                  Senha de acesso: <strong className="text-slate-300">Ed5812</strong>
                 </p>
               </div>
 

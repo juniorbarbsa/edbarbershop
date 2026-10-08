@@ -315,7 +315,7 @@ export default function BookingSection({
             <div className="lg:col-span-7 space-y-6">
               
               {/* Step 1: Services Selector */}
-              <div className="p-6 rounded-3xl glass-card space-y-4">
+              <div className="p-6 rounded-2xl barber-card space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
                     1. Escolha o Serviço
@@ -358,7 +358,7 @@ export default function BookingSection({
               </div>
 
               {/* Step 2: Minimalist Calendar */}
-              <div className="p-6 rounded-3xl glass-card space-y-4">
+              <div className="p-6 rounded-2xl barber-card space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
                     2. Escolha a Data
@@ -448,7 +448,7 @@ export default function BookingSection({
               </div>
 
               {/* Step 3: Time Chips */}
-              <div className="p-6 rounded-3xl glass-card space-y-4">
+              <div className="p-6 rounded-2xl barber-card space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
                     3. Horários Disponíveis
@@ -511,13 +511,13 @@ export default function BookingSection({
             {/* Right Column: Step 4 (Client Data) & Ticket Summary */}
             <div className="lg:col-span-5 space-y-6">
               
-              <div className="p-6 sm:p-7 rounded-3xl glass-card space-y-5">
+              <div className="p-6 sm:p-7 rounded-2xl barber-card space-y-5">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">
                   4. Confirmação do Cliente
                 </span>
 
                 {errorMsg && (
-                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{errorMsg}</span>
                   </div>
@@ -534,7 +534,7 @@ export default function BookingSection({
                       placeholder="Seu nome"
                       value={clientName}
                       onChange={(e) => setClientName(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
+                      className="w-full px-3.5 py-2.5 rounded-lg barber-input text-xs"
                     />
                   </div>
 
@@ -545,10 +545,10 @@ export default function BookingSection({
                     <input
                       type="text"
                       required
-                      placeholder="(11) 99999-9999"
+                      placeholder="(73) 99999-9999"
                       value={clientPhone}
                       onChange={handlePhoneChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
+                      className="w-full px-3.5 py-2.5 rounded-lg barber-input text-xs"
                     />
                   </div>
 
@@ -558,10 +558,10 @@ export default function BookingSection({
                     </label>
                     <input
                       type="text"
-                      placeholder="Ex: Preferência corte na tesoura"
+                      placeholder="Ex: Corte tradicional ou degradê"
                       value={clientNotes}
                       onChange={(e) => setClientNotes(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
+                      className="w-full px-3.5 py-2.5 rounded-lg barber-input text-xs"
                     />
                   </div>
 

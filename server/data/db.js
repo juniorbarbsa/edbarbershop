@@ -14,20 +14,21 @@ const defaultState = {
   settings: {
     shopName: "Ed Barber Shop",
     subtitle: "Desde 1999",
-    barberName: "Ed Barber",
-    whatsapp: "5511999999999", // Editable in Admin
-    status: "online", // "online" (Atendendo) or "offline" (Não está atendendo)
-    statusMessage: "Estamos atendendo normalmente! Escolha o melhor dia e horário abaixo.",
-    closedMessage: "No momento não estamos atendendo. Volte mais tarde ou envie uma mensagem no WhatsApp.",
-    adminPasswordHash: "$2a$10$AmEhCFd7aXDkQDaCud9LMe7HliwoR0D8/nAHVjwh2JMBczXlqvcja", // 'ed1999'
+    barberName: "Ed",
+    email: "edalves8127@gmail.com",
+    whatsapp: "5573981164949",
+    status: "online",
+    statusMessage: "Estamos atendendo! Escolha o melhor horário abaixo.",
+    closedMessage: "No momento não estamos atendendo. Chame no WhatsApp para dúvidas.",
+    adminPasswordHash: "$2a$10$oMCi/c.PcnT4FnLkMNwFkehVSAtREe8VTYHohQCIUpQ.Ita48BjGe", // 'Ed5812'
     openingHour: "09:00",
-    closingHour: "19:30",
-    slotDurationMinutes: 30,
-    workDays: [1, 2, 3, 4, 5, 6], // 0: Dom, 1: Seg, 2: Ter, 3: Qua, 4: Qui, 5: Sex, 6: Sáb
-    lunchStart: "12:00",
-    lunchEnd: "13:00",
-    address: "Rua do Estilo, 1999 - Centro",
-    instagram: "@edbarber1999"
+    closingHour: "21:00",
+    slotDurationMinutes: 35,
+    workDays: [0, 1, 2, 3, 4, 5, 6], // Aberto todos os dias (Segunda a Domingo)
+    lunchStart: "13:00",
+    lunchEnd: "14:00",
+    address: "Rua Walter Hollenwerger, 119 - Antiga Batateira, Centro",
+    instagram: "@edbarbershop"
   },
   services: [
     {

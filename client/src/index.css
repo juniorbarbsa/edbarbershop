@@ -2,8 +2,8 @@
 
 @layer base {
   body {
-    background-color: #090b0e;
-    color: #e2e8f0;
+    background-color: #0c0e12;
+    color: #e5e7eb;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
     letter-spacing: -0.01em;
@@ -15,75 +15,62 @@
   }
 }
 
-/* Subtle Barber Pole Stripe Accent */
+/* Authentic Barber Pole Stripe Top Accent */
 @keyframes barberStripes {
   0% {
     background-position: 0 0;
   }
   100% {
-    background-position: 48px 0;
+    background-position: 40px 0;
   }
 }
 
 .barber-stripe-accent {
   background: repeating-linear-gradient(
     -45deg,
-    #dc2626,
-    #dc2626 12px,
-    #ffffff 12px,
-    #ffffff 24px,
-    #2563eb 24px,
-    #2563eb 36px,
-    #ffffff 36px,
-    #ffffff 48px
+    #b91c1c,
+    #b91c1c 10px,
+    #ffffff 10px,
+    #ffffff 20px,
+    #1d4ed8 20px,
+    #1d4ed8 30px,
+    #ffffff 30px,
+    #ffffff 40px
   );
-  background-size: 48px 48px;
-  animation: barberStripes 3s linear infinite;
+  background-size: 40px 40px;
+  animation: barberStripes 3.5s linear infinite;
 }
 
-/* Ultra Clean Glassmorphism Cards */
-.glass-card {
-  background: rgba(16, 20, 28, 0.55);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+/* Grounded, Non-AI Dark Cards */
+.barber-card {
+  background: #14171f;
+  border: 1px solid #232834;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
 }
 
-.glass-card-interactive {
-  background: rgba(16, 20, 28, 0.5);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+.barber-card-interactive {
+  background: #14171f;
+  border: 1px solid #232834;
+  transition: all 0.2s ease;
 }
 
-.glass-card-interactive:hover {
-  background: rgba(22, 28, 39, 0.7);
-  border-color: rgba(255, 255, 255, 0.16);
-  transform: translateY(-2px);
-  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
+.barber-card-interactive:hover {
+  background: #181c26;
+  border-color: #3b4356;
+  transform: translateY(-1px);
 }
 
-.glass-pill {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.barber-input {
+  background: #0f1217;
+  border: 1px solid #232834;
+  color: #f9fafb;
+  transition: all 0.15s ease;
 }
 
-.glass-input {
-  background: rgba(12, 16, 23, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  color: #f8fafc;
-  transition: all 0.18s ease;
-}
-
-.glass-input:focus {
+.barber-input:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
-  background: rgba(16, 21, 30, 0.9);
+  border-color: #e5e7eb;
+  background: #13171e;
 }
 
 /* Custom Scrollbar */
@@ -93,14 +80,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #090b0e;
+  background: #0c0e12;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e2430;
+  background: #232834;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #dc2626;
+  background: #b91c1c;
 }
