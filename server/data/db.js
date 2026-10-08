@@ -151,7 +151,29 @@ function saveDbSync() {
   }
 }
 
+function timeToMinutes(timeStr) {
+  if (!timeStr || typeof timeStr !== 'string') return 0;
+  const parts = timeStr.split(':').map(Number);
+  return (parts[0] || 0) * 60 + (parts[1] || 0);
+}
+
+function minutesToTime(totalMinutes) {
+  const h = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+  const m = (totalMinutes % 60).toString().padStart(2, '0');
+  return `${h}:${m}`;
+}
+
+function hasTimeOverlap(startMinutesA, durationA, startMinutesB, durationB) {
+  const endA = startMinutesA + durationA;
+  const endB = startMinutesB + durationB;
+  return startMinutesA < endB && startMinutesB < endA;
+}
+
 const db = {
+  timeToMinutes,
+  minutesToTime,
+  hasTimeOverlap,
+
   getSettings() {
     return loadDb().settings;
   },
@@ -192,19 +214,117 @@ const db = {
   getAppointments() {
     return loadDb().appointments;
   },
-  addAppointment(appointment) {
+
+  // Check if a slot or time interval has ANY conflict on a given date
+  checkSlotConflict(date, time, durationMinutes) {
     const data = loadDb();
+    const settings = data.settings;
+    const duration = durationMinutes || settings.slotDurationMinutes || 35;
+    const reqStart = timeToMinutes(time);
+    const reqEnd = reqStart + duration;
+
+    // 1. Business hours check
+    const openMinutes = timeToMinutes(settings.openingHour || '09:00');
+    const closeMinutes = timeToMinutes(settings.closingHour || '21:00');
+    if (reqStart < openMinutes || reqEnd > closeMinutes) {
+      return {
+        hasConflict: true,
+        reason: `Fora do horário de funcionamento (${settings.openingHour} às ${settings.closingHour}).`
+      };
+    }
+
+    // 2. Lunch break check
+    const lunchStart = timeToMinutes(settings.lunchStart || '13:00');
+    const lunchEnd = timeToMinutes(settings.lunchEnd || '14:00');
+    if (hasTimeOverlap(reqStart, duration, lunchStart, lunchEnd - lunchStart)) {
+      return {
+        hasConflict: true,
+        reason: `Intervalo de almoço (${settings.lunchStart} às ${settings.lunchEnd}).`
+      };
+    }
+
+    // 3. Blocked days or specific times
+    const isDayBlocked = (data.blockedSlots || []).some(b => b.date === date && b.allDay);
+    if (isDayBlocked) {
+      return {
+        hasConflict: true,
+        reason: 'Data bloqueada na agenda pelo barbeiro.'
+      };
+    }
+
+    const timeBlock = (data.blockedSlots || []).find(b => {
+      if (b.date !== date || b.allDay) return false;
+      const bStart = timeToMinutes(b.time);
+      const bDuration = b.durationMinutes || settings.slotDurationMinutes || 35;
+      return hasTimeOverlap(reqStart, duration, bStart, bDuration);
+    });
+    if (timeBlock) {
+      return {
+        hasConflict: true,
+        reason: `Horário bloqueado (${timeBlock.reason || 'Indisponível'}).`
+      };
+    }
+
+    // 4. Overlap with existing non-cancelled appointments
+    const conflictingApt = (data.appointments || []).find(a => {
+      if (a.date !== date || a.status === 'cancelled') return false;
+      const aStart = timeToMinutes(a.time);
+      const aDuration = a.durationMinutes || settings.slotDurationMinutes || 35;
+      return hasTimeOverlap(reqStart, duration, aStart, aDuration);
+    });
+
+    if (conflictingApt) {
+      return {
+        hasConflict: true,
+        conflictAppointment: conflictingApt,
+        reason: `Horário já reservado (${conflictingApt.time}).`
+      };
+    }
+
+    return { hasConflict: false };
+  },
+
+  // Atomic conflict-free booking method
+  bookAppointment(appointment) {
+    const data = loadDb();
+    const settings = data.settings;
+
+    if (settings.status === 'offline') {
+      const err = new Error(settings.closedMessage || 'No momento o barbeiro não está aceitando novos agendamentos.');
+      err.code = 'BARBER_OFFLINE';
+      throw err;
+    }
+
+    const { date, time } = appointment;
+    const duration = appointment.durationMinutes || settings.slotDurationMinutes || 35;
+
+    // Strict conflict verification before adding to database
+    const conflictResult = this.checkSlotConflict(date, time, duration);
+    if (conflictResult.hasConflict) {
+      const err = new Error(conflictResult.reason || 'Conflito de horário detectado.');
+      err.code = 'SLOT_CONFLICT';
+      err.detail = conflictResult;
+      throw err;
+    }
+
     const id = "apt-" + Date.now();
     const newAppointment = {
       ...appointment,
       id,
+      durationMinutes: duration,
       status: appointment.status || "confirmed",
       createdAt: new Date().toISOString()
     };
+
     data.appointments.push(newAppointment);
     saveDbSync();
     return newAppointment;
   },
+
+  addAppointment(appointment) {
+    return this.bookAppointment(appointment);
+  },
+
   updateAppointmentStatus(id, status) {
     const data = loadDb();
     const index = data.appointments.findIndex(a => a.id === id);

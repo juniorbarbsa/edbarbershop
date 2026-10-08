@@ -218,6 +218,11 @@ export default function BookingModal({
       }
     } catch (err) {
       setErrorMsg(err.message || 'Erro ao realizar o agendamento.');
+      // Atualiza os horários em tempo real para refletir a nova disponibilidade imediatamente
+      getAvailableSlots(selectedDate)
+        .then((data) => setSlotsData(data))
+        .catch(() => {});
+      setSelectedTime(null);
     } finally {
       setSubmitting(false);
     }
@@ -502,11 +507,12 @@ export default function BookingModal({
                               type="button"
                               disabled={!slot.available}
                               onClick={() => setSelectedTime(slot.time)}
+                              title={!slot.available ? (slot.reason ? `${slot.time} - ${slot.reason}` : `${slot.time} - Indisponível`) : `Agendar ${slot.time}`}
                               className={`py-1.5 px-1 rounded-md text-xs font-semibold transition flex flex-col items-center justify-center cursor-pointer ${
                                 isSelected
                                   ? 'bg-white text-slate-950 font-bold shadow'
                                   : !slot.available
-                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-30'
+                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-35 line-through'
                                   : 'bg-[#181c26] text-slate-200 hover:bg-[#232834]'
                               }`}
                             >
@@ -534,11 +540,12 @@ export default function BookingModal({
                               type="button"
                               disabled={!slot.available}
                               onClick={() => setSelectedTime(slot.time)}
+                              title={!slot.available ? (slot.reason ? `${slot.time} - ${slot.reason}` : `${slot.time} - Indisponível`) : `Agendar ${slot.time}`}
                               className={`py-1.5 px-1 rounded-md text-xs font-semibold transition flex flex-col items-center justify-center cursor-pointer ${
                                 isSelected
                                   ? 'bg-white text-slate-950 font-bold shadow'
                                   : !slot.available
-                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-30'
+                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-35 line-through'
                                   : 'bg-[#181c26] text-slate-200 hover:bg-[#232834]'
                               }`}
                             >
@@ -566,11 +573,12 @@ export default function BookingModal({
                               type="button"
                               disabled={!slot.available}
                               onClick={() => setSelectedTime(slot.time)}
+                              title={!slot.available ? (slot.reason ? `${slot.time} - ${slot.reason}` : `${slot.time} - Indisponível`) : `Agendar ${slot.time}`}
                               className={`py-1.5 px-1 rounded-md text-xs font-semibold transition flex flex-col items-center justify-center cursor-pointer ${
                                 isSelected
                                   ? 'bg-white text-slate-950 font-bold shadow'
                                   : !slot.available
-                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-30'
+                                  ? 'bg-[#10131a] text-slate-600 cursor-not-allowed opacity-35 line-through'
                                   : 'bg-[#181c26] text-slate-200 hover:bg-[#232834]'
                               }`}
                             >
@@ -581,6 +589,12 @@ export default function BookingModal({
                       </div>
                     </div>
                   )}
+
+                  {/* Reassurance anti-conflict notice */}
+                  <div className="pt-2 border-t border-[#1a1e28] flex items-center gap-2 text-[11px] text-emerald-400/90">
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+                    <span>Horário individual e pontual: sem filas, sem sobreposição e sem cliente esperando.</span>
+                  </div>
                 </div>
               )}
             </div>

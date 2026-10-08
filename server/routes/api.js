@@ -147,37 +147,23 @@ router.get('/available-slots', (req, res) => {
     const slots = [];
 
     for (let m = startMinutes; m + duration <= endMinutes; m += duration) {
-      const h = Math.floor(m / 60).toString().padStart(2, '0');
-      const min = (m % 60).toString().padStart(2, '0');
-      const timeStr = `${h}:${min}`;
+      const timeStr = db.minutesToTime(m);
 
-      // Check lunch time
-      const isLunch = (m >= lunchStartMinutes && m < lunchEndMinutes);
-
-      // Check booked
-      const isBooked = appointments.some(a => a.time === timeStr);
-
-      // Check specifically blocked
-      const isBlocked = dayBlocks.some(b => b.time === timeStr);
-
-      // Check past time if today (with 10-minute buffer)
+      // Check past time if today (with 10-minute buffer to ensure barber has time)
       const isPast = isToday && (m <= currentMinutesNow + 10);
+
+      // Check slot conflict against lunch, blocks and other appointments
+      const conflictCheck = db.checkSlotConflict(date, timeStr, duration);
 
       let available = true;
       let reason = null;
 
-      if (isLunch) {
+      if (isPast) {
         available = false;
-        reason = 'Almoço';
-      } else if (isPast) {
+        reason = 'Horário já passou';
+      } else if (conflictCheck.hasConflict) {
         available = false;
-        reason = 'Horário passado';
-      } else if (isBooked) {
-        available = false;
-        reason = 'Ocupado';
-      } else if (isBlocked) {
-        available = false;
-        reason = 'Indisponível';
+        reason = conflictCheck.reason || 'Ocupado';
       }
 
       slots.push({
@@ -200,7 +186,7 @@ router.get('/available-slots', (req, res) => {
   }
 });
 
-// 3. Create Appointment (Book Slot & Get WhatsApp Redirect Link)
+// 3. Create Appointment (Atomic Conflict-Free Booking & WhatsApp Link)
 router.post('/appointments', (req, res) => {
   try {
     const { clientName, clientPhone, clientNotes, serviceName, serviceId, date, time } = req.body;
@@ -218,48 +204,38 @@ router.post('/appointments', (req, res) => {
       });
     }
 
-    // Check slot availability (conflict check)
-    const existingAppointments = db.getAppointments();
-    const isConflict = existingAppointments.some(
-      a => a.date === date && a.time === time && a.status !== 'cancelled'
-    );
+    try {
+      // Atomic booking with strict conflict validation
+      const newAppointment = db.bookAppointment({
+        clientName: clientName.trim(),
+        clientPhone: clientPhone.trim(),
+        clientNotes: clientNotes ? clientNotes.trim() : '',
+        serviceId: serviceId || 'atendimento-geral',
+        serviceName: serviceName || 'Corte / Barba',
+        price: null,
+        durationMinutes: 35,
+        date,
+        time,
+        status: 'confirmed'
+      });
 
-    if (isConflict) {
-      return res.status(409).json({ error: 'Este horário acabou de ser reservado por outro cliente. Por favor, escolha outro horário.' });
+      // Build WhatsApp Redirect URL
+      const whatsappRedirectUrl = buildWhatsAppUrl(settings.whatsapp, newAppointment, settings);
+
+      return res.status(201).json({
+        success: true,
+        message: 'Agendamento registrado com sucesso!',
+        appointment: newAppointment,
+        whatsappRedirectUrl
+      });
+    } catch (bookErr) {
+      if (['SLOT_CONFLICT', 'BARBER_OFFLINE', 'OUT_OF_HOURS', 'LUNCH_CONFLICT', 'DATE_BLOCKED', 'SLOT_BLOCKED'].includes(bookErr.code)) {
+        return res.status(409).json({
+          error: bookErr.message || 'Este horário acabou de ser reservado por outro cliente. Por favor, escolha outro horário.'
+        });
+      }
+      throw bookErr;
     }
-
-    // Check blocked slots
-    const blockedSlots = db.getBlockedSlots();
-    const isBlocked = blockedSlots.some(
-      b => b.date === date && (b.allDay || b.time === time)
-    );
-    if (isBlocked) {
-      return res.status(409).json({ error: 'Este horário não está disponível para agendamento.' });
-    }
-
-    // Create appointment
-    const newAppointment = db.addAppointment({
-      clientName: clientName.trim(),
-      clientPhone: clientPhone.trim(),
-      clientNotes: clientNotes ? clientNotes.trim() : '',
-      serviceId: serviceId || 'atendimento-geral',
-      serviceName: serviceName || 'Corte / Barba',
-      price: null,
-      durationMinutes: 35,
-      date,
-      time,
-      status: 'confirmed'
-    });
-
-    // Build WhatsApp Redirect URL
-    const whatsappRedirectUrl = buildWhatsAppUrl(settings.whatsapp, newAppointment, settings);
-
-    res.status(201).json({
-      success: true,
-      message: 'Agendamento registrado com sucesso!',
-      appointment: newAppointment,
-      whatsappRedirectUrl
-    });
   } catch (err) {
     console.error('Erro em POST /appointments:', err);
     res.status(500).json({ error: 'Erro ao processar o agendamento.' });
