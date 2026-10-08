@@ -54,16 +54,16 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
           {/* Right Navigation */}
           <div className="hidden md:flex items-center gap-5">
             <button 
-              onClick={() => document.getElementById('servicos')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={onScrollToBooking}
               className="text-xs font-semibold text-slate-300 hover:text-white transition tracking-wide cursor-pointer"
             >
-              Serviços & Preços
+              Agendar Horário
             </button>
             <button 
               onClick={() => document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' })}
               className="text-xs font-semibold text-slate-300 hover:text-white transition tracking-wide cursor-pointer"
             >
-              Endereço
+              Endereço & Horários
             </button>
 
             {/* Direct WhatsApp Call */}
@@ -134,10 +134,10 @@ export default function Navbar({ settings, onOpenAdmin, onScrollToBooking }) {
             </div>
 
             <button 
-              onClick={() => { setMobileMenuOpen(false); document.getElementById('servicos')?.scrollIntoView({ behavior: 'smooth' }); }}
+              onClick={() => { setMobileMenuOpen(false); onScrollToBooking(); }}
               className="text-left text-sm py-1.5 text-slate-300"
             >
-              Serviços & Preços
+              Agendar Horário
             </button>
             <button 
               onClick={() => { setMobileMenuOpen(false); document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }); }}

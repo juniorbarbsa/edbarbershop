@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import ServicesSection from './components/ServicesSection';
 import BookingSection from './components/BookingSection';
 import LocationFooter from './components/LocationFooter';
 import AdminModal from './components/AdminModal';
@@ -9,8 +8,6 @@ import { getPublicInfo } from './api';
 
 export default function App() {
   const [settings, setSettings] = useState(null);
-  const [services, setServices] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -19,10 +16,6 @@ export default function App() {
     try {
       const data = await getPublicInfo();
       setSettings(data.settings);
-      setServices(data.services || []);
-      if (!selectedService && data.services?.length > 0) {
-        setSelectedService(data.services[0]);
-      }
     } catch (err) {
       console.error('Erro ao carregar dados:', err);
     } finally {
@@ -39,11 +32,6 @@ export default function App() {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
-  };
-
-  const handleSelectService = (service) => {
-    setSelectedService(service);
-    handleScrollToBooking();
   };
 
   const handleSettingsUpdated = (updatedSettings) => {
@@ -89,18 +77,9 @@ export default function App() {
           onScrollToBooking={handleScrollToBooking}
         />
 
-        {/* Services Showcase */}
-        <ServicesSection
-          services={services}
-          onSelectService={handleSelectService}
-        />
-
-        {/* Interactive Booking Flow */}
+        {/* Direct & Intuitive Booking Flow */}
         <BookingSection
-          services={services}
           settings={settings}
-          selectedService={selectedService}
-          setSelectedService={setSelectedService}
           onAppointmentCreated={() => {}}
         />
 

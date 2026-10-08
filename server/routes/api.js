@@ -42,10 +42,10 @@ function buildWhatsAppUrl(barberPhone, appointment, settings) {
     `━━━━━━━━━━━━━━━━━━━━━━━━━`,
     `👤 *Cliente:* ${appointment.clientName}`,
     `📱 *WhatsApp:* ${appointment.clientPhone}`,
-    `✂️ *Serviço:* ${appointment.serviceName}`,
     `📅 *Data:* ${formattedDate}`,
     `⏰ *Horário:* ${appointment.time}`,
-    `💰 *Valor:* R$ ${Number(appointment.price).toFixed(2).replace('.', ',')}`,
+    appointment.serviceName ? `✂️ *Procedimento:* ${appointment.serviceName}` : null,
+    appointment.price ? `💰 *Valor:* R$ ${Number(appointment.price).toFixed(2).replace('.', ',')}` : null,
     appointment.clientNotes ? `📝 *Observação:* ${appointment.clientNotes}` : null,
     `━━━━━━━━━━━━━━━━━━━━━━━━━`,
     `Olá ${settings.barberName}! Acabei de agendar meu horário pelo site e gostaria de confirmar.`
@@ -203,10 +203,10 @@ router.get('/available-slots', (req, res) => {
 // 3. Create Appointment (Book Slot & Get WhatsApp Redirect Link)
 router.post('/appointments', (req, res) => {
   try {
-    const { clientName, clientPhone, clientNotes, serviceId, date, time } = req.body;
+    const { clientName, clientPhone, clientNotes, serviceName, serviceId, date, time } = req.body;
 
-    if (!clientName || !clientPhone || !serviceId || !date || !time) {
-      return res.status(400).json({ error: 'Todos os campos obrigatórios devem ser preenchidos.' });
+    if (!clientName || !clientPhone || !date || !time) {
+      return res.status(400).json({ error: 'Nome, telefone, data e horário são obrigatórios.' });
     }
 
     const settings = db.getSettings();
@@ -216,13 +216,6 @@ router.post('/appointments', (req, res) => {
       return res.status(400).json({
         error: settings.closedMessage || 'No momento o barbeiro não está recebendo novos agendamentos.'
       });
-    }
-
-    // Validate service
-    const services = db.getServices();
-    const service = services.find(s => s.id === serviceId);
-    if (!service) {
-      return res.status(404).json({ error: 'Serviço selecionado não foi encontrado.' });
     }
 
     // Check slot availability (conflict check)
@@ -249,10 +242,10 @@ router.post('/appointments', (req, res) => {
       clientName: clientName.trim(),
       clientPhone: clientPhone.trim(),
       clientNotes: clientNotes ? clientNotes.trim() : '',
-      serviceId: service.id,
-      serviceName: service.name,
-      price: service.price,
-      durationMinutes: service.durationMinutes,
+      serviceId: serviceId || 'atendimento-geral',
+      serviceName: serviceName || 'Corte / Barba',
+      price: null,
+      durationMinutes: 35,
       date,
       time,
       status: 'confirmed'
