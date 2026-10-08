@@ -29,7 +29,7 @@ function cleanPhone(phone) {
   return phone.replace(/\D/g, '');
 }
 
-// Helper: build WhatsApp URL with pre-filled message
+// Helper: build WhatsApp URL with clean, standard message formatting
 function buildWhatsAppUrl(barberPhone, appointment, settings) {
   const cleanBarber = cleanPhone(barberPhone);
   
@@ -37,19 +37,22 @@ function buildWhatsAppUrl(barberPhone, appointment, settings) {
   const [year, month, day] = appointment.date.split('-');
   const formattedDate = `${day}/${month}/${year}`;
 
-  const message = [
-    `💈 *NOVO AGENDAMENTO - ${settings.shopName.toUpperCase()}* 💈`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `👤 *Cliente:* ${appointment.clientName}`,
-    `📱 *WhatsApp:* ${appointment.clientPhone}`,
-    `📅 *Data:* ${formattedDate}`,
-    `⏰ *Horário:* ${appointment.time}`,
-    appointment.serviceName ? `✂️ *Procedimento:* ${appointment.serviceName}` : null,
-    appointment.price ? `💰 *Valor:* R$ ${Number(appointment.price).toFixed(2).replace('.', ',')}` : null,
-    appointment.clientNotes ? `📝 *Observação:* ${appointment.clientNotes}` : null,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `Olá ${settings.barberName}! Acabei de agendar meu horário pelo site e gostaria de confirmar.`
-  ].filter(Boolean).join('\n');
+  const lines = [
+    `*Agendamento - ${settings.shopName}*`,
+    ``,
+    `Olá ${settings.barberName}! Gostaria de confirmar meu horário agendado pelo site:`,
+    ``,
+    `*Cliente:* ${appointment.clientName}`,
+    `*Data:* ${formattedDate}`,
+    `*Horário:* ${appointment.time}`,
+    appointment.serviceName ? `*Procedimento:* ${appointment.serviceName}` : null,
+    appointment.clientNotes ? `*Observação:* ${appointment.clientNotes}` : null,
+    `*WhatsApp:* ${appointment.clientPhone}`,
+    ``,
+    `Aguardo a confirmação. Obrigado!`
+  ].filter(line => line !== null);
+
+  const message = lines.join('\n');
 
   return `https://api.whatsapp.com/send?phone=${cleanBarber}&text=${encodeURIComponent(message)}`;
 }

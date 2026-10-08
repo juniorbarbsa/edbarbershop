@@ -95,35 +95,6 @@
       "badge": "Estilo Único"
     }
   ],
-  "appointments": [
-    {
-      "clientName": "Carlos Eduardo",
-      "clientPhone": "(11) 98765-4321",
-      "clientNotes": "Corte degrad� baixo",
-      "serviceId": "srv-1",
-      "serviceName": "Corte Clássico & Degradê",
-      "price": 35,
-      "durationMinutes": 35,
-      "date": "2026-10-15",
-      "time": "14:30",
-      "status": "completed",
-      "id": "apt-1791436866351",
-      "createdAt": "2026-10-08T05:21:06.351Z"
-    },
-    {
-      "clientName": "Lucas Santos",
-      "clientPhone": "(73) 98888-7777",
-      "clientNotes": "Corte degrad� navalhado",
-      "serviceId": "srv-1",
-      "serviceName": "Corte Clássico & Degradê",
-      "price": 35,
-      "durationMinutes": 35,
-      "date": "2026-10-18",
-      "time": "10:10",
-      "status": "completed",
-      "id": "apt-1791439251253",
-      "createdAt": "2026-10-08T06:00:51.253Z"
-    }
-  ],
+  "appointments": [],
   "blockedSlots": []
 }
