@@ -52,45 +52,45 @@ export default function AdminModal({ isOpen, onClose, onSettingsUpdated }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md overflow-hidden">
       
-      <div className={`relative w-full ${token ? 'max-w-5xl my-8' : 'max-w-sm'} rounded-3xl glass-card border border-white/10 p-6 sm:p-8 shadow-2xl transition-all`}>
+      <div className={`relative w-full ${token ? 'max-w-5xl h-[95vh] sm:h-auto sm:max-h-[92vh]' : 'max-w-sm max-h-[92vh]'} flex flex-col rounded-t-3xl sm:rounded-2xl barber-card border border-[#2b3342] shadow-2xl transition-all overflow-hidden`}>
         
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.06] transition cursor-pointer z-10"
-          title="Fechar"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {token ? (
-          <div>
-            <div className="flex items-center justify-between pb-6 mb-6 border-b border-white/[0.06]">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-white/[0.05] text-slate-300">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-white font-['Outfit']">
-                    Painel do Barbeiro
-                  </h3>
-                  <p className="text-[11px] text-slate-400">
-                    Sessão administrativa autenticada
-                  </p>
-                </div>
-              </div>
+        {/* Sticky Header with Close button */}
+        <div className="shrink-0 bg-[#0e1117] border-b border-[#1f242e] px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between z-10">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-lg bg-white/[0.05] text-slate-300">
+              {token ? <ShieldCheck className="w-4 h-4 text-emerald-400" /> : <Lock className="w-4 h-4 text-slate-300" />}
             </div>
+            <div>
+              <h3 className="text-sm sm:text-base font-bold text-white font-['Outfit'] leading-tight">
+                {token ? 'Painel do Barbeiro' : 'Área Restrita'}
+              </h3>
+              <p className="text-[10px] sm:text-[11px] text-slate-400">
+                {token ? 'Gerenciamento de agenda e horários' : 'Acesso com usuário e senha'}
+              </p>
+            </div>
+          </div>
 
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a202c] transition cursor-pointer"
+            title="Fechar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Modal Scrollable Body */}
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-6">
+          {token ? (
             <AdminDashboard
               token={token}
               onLogout={handleLogout}
               onStatusChange={onSettingsUpdated}
             />
-          </div>
-        ) : (
-          <div className="space-y-6 text-center">
+          ) : (
+            <div className="space-y-5 text-center py-2">
             
             <div className="space-y-2">
               <div className="w-12 h-12 mx-auto rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-slate-300">
@@ -170,6 +170,7 @@ export default function AdminModal({ isOpen, onClose, onSettingsUpdated }) {
 
           </div>
         )}
+        </div>
 
       </div>
     </div>

@@ -198,37 +198,48 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
     <div className="space-y-6 text-slate-100">
       
       {/* Top Bar: Barber Status & Actions */}
-      <div className="p-4 sm:p-5 rounded-2xl barber-card flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="p-3.5 sm:p-5 rounded-2xl barber-card space-y-3">
         
-        {/* Barber Info */}
-        <div className="flex items-center gap-3 self-start sm:self-center">
-          <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
-          <div>
-            <h2 className="text-base font-bold text-white font-['Outfit']">
-              Painel do Ed Barber
-            </h2>
-            <p className="text-[11px] text-slate-400">
-              WhatsApp: (73) 98116-4949
-            </p>
+        {/* Row 1: Barber Info & Logout */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <img src="/logo.png" alt="Logo" className="w-9 h-9 sm:w-10 sm:h-10 object-contain rounded-lg" />
+            <div>
+              <h2 className="text-sm sm:text-base font-bold text-white font-['Outfit'] leading-tight">
+                Painel do Ed Barber
+              </h2>
+              <p className="text-[11px] text-slate-400">
+                WhatsApp: (73) 98116-4949
+              </p>
+            </div>
           </div>
+
+          <button
+            onClick={onLogout}
+            title="Sair do Painel"
+            className="px-2.5 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition cursor-pointer flex items-center gap-1.5 text-xs font-semibold shrink-0"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sair</span>
+          </button>
         </div>
 
-        {/* Big Barber Status Toggle */}
-        <div className="flex items-center gap-3 bg-[#0d1015] p-2 rounded-xl border border-[#232834] w-full sm:w-auto justify-between sm:justify-start">
-          <div className="text-left sm:text-right pr-2">
-            <p className="text-[10px] text-slate-400 font-medium">Status de Atendimento:</p>
-            <p className={`text-xs font-bold ${isOnline ? 'text-emerald-400' : 'text-amber-400'}`}>
+        {/* Row 2: Status Banner with 2 equal-width buttons */}
+        <div className="bg-[#0d1015] p-2.5 rounded-xl border border-[#232834] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="flex items-center justify-between sm:justify-start gap-2">
+            <span className="text-[11px] text-slate-400 font-medium">Status de Atendimento:</span>
+            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${isOnline ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
               {isOnline ? '● Atendendo' : '○ Pausado'}
-            </p>
+            </span>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-1.5 w-full sm:w-auto">
             <button
               onClick={() => handleToggleStatus('online')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
+              className={`py-1.5 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                 isOnline
                   ? 'bg-emerald-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  : 'bg-white/[0.04] text-slate-400 hover:text-white'
               }`}
             >
               <Check className="w-3.5 h-3.5" />
@@ -237,24 +248,16 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
 
             <button
               onClick={() => handleToggleStatus('offline')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
+              className={`py-1.5 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                 !isOnline
                   ? 'bg-amber-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  : 'bg-white/[0.04] text-slate-400 hover:text-white'
               }`}
             >
               <Power className="w-3.5 h-3.5" />
               <span>Pausar</span>
             </button>
           </div>
-
-          <button
-            onClick={onLogout}
-            title="Sair do Painel"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
         </div>
 
       </div>
@@ -340,12 +343,12 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
       {activeTab === 'appointments' && (
         <div className="space-y-4">
           
-          {/* Subfilters */}
-          <div className="flex items-center justify-between gap-2 overflow-x-auto">
-            <div className="flex items-center gap-1 bg-[#10131a] p-1 rounded-lg border border-[#1f242e] shrink-0">
+          {/* Subfilters & Refresh */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="grid grid-cols-3 gap-1 bg-[#10131a] p-1 rounded-lg border border-[#1f242e] w-full sm:w-auto">
               <button
                 onClick={() => setAppointmentFilter('today')}
-                className={`px-2.5 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer ${
+                className={`px-2 py-1.5 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer text-center ${
                   appointmentFilter === 'today'
                     ? 'bg-white text-slate-950 shadow'
                     : 'text-slate-400 hover:text-white'
@@ -355,7 +358,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
               </button>
               <button
                 onClick={() => setAppointmentFilter('upcoming')}
-                className={`px-2.5 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer ${
+                className={`px-2 py-1.5 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer text-center ${
                   appointmentFilter === 'upcoming'
                     ? 'bg-white text-slate-950 shadow'
                     : 'text-slate-400 hover:text-white'
@@ -365,7 +368,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
               </button>
               <button
                 onClick={() => setAppointmentFilter('all')}
-                className={`px-2.5 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer ${
+                className={`px-2 py-1.5 rounded-md text-[11px] sm:text-xs font-bold transition cursor-pointer text-center ${
                   appointmentFilter === 'all'
                     ? 'bg-white text-slate-950 shadow'
                     : 'text-slate-400 hover:text-white'
@@ -377,11 +380,11 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
 
             <button
               onClick={loadData}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1 text-xs shrink-0"
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-[#10131a] border border-[#1f242e] text-slate-400 hover:text-white transition cursor-pointer flex items-center justify-center gap-1.5 text-xs w-full sm:w-auto shrink-0"
               title="Atualizar lista"
             >
               <RefreshCw className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Atualizar</span>
+              <span>Atualizar</span>
             </button>
           </div>
 
@@ -391,7 +394,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
               Nenhum agendamento para este filtro.
             </div>
           ) : (
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {filteredAppointments.map((apt) => {
                 const cleanPhone = (apt.clientPhone || '').replace(/\D/g, '');
                 const isConfirmed = apt.status === 'confirmed';
@@ -401,100 +404,110 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
                 return (
                   <div
                     key={apt.id}
-                    className="p-3.5 sm:p-4 rounded-xl barber-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                    className="p-3.5 sm:p-4 rounded-xl barber-card space-y-3 border border-[#232a3b]/60 hover:border-[#384259] transition"
                   >
-                    {/* Time & Client info */}
-                    <div className="flex items-start gap-3 w-full sm:w-auto">
-                      <div className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-[#1a202c] border border-[#2d3748] text-center shrink-0">
-                        <span className="text-sm sm:text-base font-bold text-white block">
-                          {apt.time}
-                        </span>
-                        <span className="text-[9px] sm:text-[10px] text-slate-400 block">
-                          {apt.date.split('-').reverse().join('/')}
-                        </span>
-                      </div>
+                    {/* Header: Time, Name, Status, and Action Icons */}
+                    <div className="flex items-start justify-between gap-2.5">
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        {/* Time & Date Badge */}
+                        <div className="px-2.5 py-1 rounded-lg bg-[#141824] border border-[#262f44] text-center shrink-0">
+                          <span className="text-xs sm:text-sm font-bold text-white block leading-tight">
+                            {apt.time}
+                          </span>
+                          <span className="text-[9px] text-slate-400 block leading-tight mt-0.5">
+                            {apt.date.split('-').reverse().join('/')}
+                          </span>
+                        </div>
 
-                      <div className="space-y-0.5 flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-sm font-bold text-white truncate">{apt.clientName}</h4>
+                        {/* Client Name & Status Badge */}
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-sm font-bold text-white truncate leading-snug">
+                            {apt.clientName}
+                          </h4>
                           <span
-                            className={`px-2 py-0.2 rounded text-[10px] font-bold shrink-0 ${
+                            className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-bold leading-none mt-0.5 ${
                               isConfirmed
-                                ? 'bg-blue-500/20 text-blue-400'
+                                ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
                                 : isCompleted
-                                ? 'bg-emerald-500/20 text-emerald-400'
-                                : 'bg-red-500/20 text-red-400'
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                : 'bg-red-500/20 text-red-400 border border-red-500/30'
                             }`}
                           >
                             {isConfirmed ? 'Agendado' : isCompleted ? 'Atendido' : 'Cancelado'}
                           </span>
                         </div>
+                      </div>
 
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                          <span className="flex items-center gap-1 text-slate-300">
-                            <Phone className="w-3 h-3 text-slate-400" />
-                            {apt.clientPhone}
-                          </span>
-                          {apt.serviceName && (
-                            <>
-                              <span>•</span>
-                              <span>{apt.serviceName}</span>
-                            </>
-                          )}
-                        </div>
-
-                        {apt.clientNotes && (
-                          <p className="text-[11px] text-slate-400 italic">
-                            "{apt.clientNotes}"
-                          </p>
+                      {/* Top-Right Secondary Actions: Cancel / Delete */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        {!isCancelled && !isCompleted && (
+                          <button
+                            onClick={() => handleStatusChange(apt.id, 'cancelled')}
+                            className="p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs transition cursor-pointer active:scale-95 border border-amber-500/20"
+                            title="Cancelar agendamento"
+                          >
+                            <XCircle className="w-3.5 h-3.5" />
+                          </button>
                         )}
+                        <button
+                          onClick={() => handleDeleteAppointment(apt.id)}
+                          className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition cursor-pointer active:scale-95 border border-red-500/20"
+                          title="Excluir agendamento"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-[#1f242e]">
+                    {/* Middle Info: Phone & Procedure */}
+                    <div className="p-2.5 rounded-lg bg-[#0c0e14] border border-[#1b212e] space-y-1.5 text-xs">
+                      <div className="flex flex-wrap items-center justify-between gap-1.5">
+                        <span className="flex items-center gap-1.5 text-slate-300 font-medium">
+                          <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>{apt.clientPhone}</span>
+                        </span>
+                        {apt.serviceName && (
+                          <span className="px-2 py-0.5 rounded-md bg-[#161c29] border border-[#2b354c] text-white font-semibold text-[11px] truncate">
+                            {apt.serviceName}
+                          </span>
+                        )}
+                      </div>
+
+                      {apt.clientNotes && (
+                        <p className="text-[11px] text-slate-400 italic pt-1 border-t border-[#181d28]">
+                          "{apt.clientNotes}"
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Bottom Primary Actions: 2 Equal Columns Grid */}
+                    <div className="grid grid-cols-2 gap-2 pt-0.5">
                       {/* WhatsApp direct talk */}
                       <a
                         href={`https://api.whatsapp.com/send?phone=${cleanPhone}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex-1 sm:flex-none justify-center px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-emerald-500/30 cursor-pointer active:scale-95"
+                        className="w-full py-2 px-2.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 border border-emerald-500/30 cursor-pointer active:scale-95 text-center"
                       >
-                        <MessageSquare className="w-3.5 h-3.5" />
+                        <MessageSquare className="w-3.5 h-3.5 shrink-0" />
                         <span>WhatsApp</span>
                       </a>
 
-                      {/* Concluir */}
-                      {!isCompleted && !isCancelled && (
+                      {/* Concluir / Atendido */}
+                      {!isCompleted && !isCancelled ? (
                         <button
                           onClick={() => handleStatusChange(apt.id, 'completed')}
-                          className="px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-blue-500/30 cursor-pointer active:scale-95"
+                          className="w-full py-2 px-2.5 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 border border-blue-500/30 cursor-pointer active:scale-95 text-center"
                           title="Marcar como atendido"
                         >
-                          <Check className="w-3.5 h-3.5" />
+                          <Check className="w-3.5 h-3.5 shrink-0" />
                           <span>Atendido</span>
                         </button>
+                      ) : (
+                        <div className="w-full py-2 px-2 rounded-lg bg-white/[0.03] border border-white/[0.06] text-slate-500 text-xs font-medium flex items-center justify-center text-center">
+                          {isCompleted ? '✓ Atendido' : '✕ Cancelado'}
+                        </div>
                       )}
-
-                      {/* Cancelar */}
-                      {!isCancelled && !isCompleted && (
-                        <button
-                          onClick={() => handleStatusChange(apt.id, 'cancelled')}
-                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-amber-600/30 text-amber-400 text-xs transition cursor-pointer active:scale-95"
-                          title="Cancelar agendamento"
-                        >
-                          <XCircle className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-
-                      {/* Excluir */}
-                      <button
-                        onClick={() => handleDeleteAppointment(apt.id)}
-                        className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 transition cursor-pointer active:scale-95"
-                        title="Excluir"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
                     </div>
 
                   </div>
@@ -649,7 +662,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="px-4 py-2 rounded-lg bg-white text-slate-950 font-bold text-xs cursor-pointer shadow"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-white text-slate-950 font-bold text-xs cursor-pointer shadow"
               >
                 Salvar Configurações
               </button>
@@ -691,7 +704,7 @@ export default function AdminDashboard({ token, onLogout, onStatusChange }) {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-white text-slate-950 font-bold text-xs cursor-pointer"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-slate-200 hover:bg-white text-slate-950 font-bold text-xs cursor-pointer"
               >
                 Atualizar Senha
               </button>
