@@ -95,6 +95,35 @@
       "badge": "Estilo Único"
     }
   ],
-  "appointments": [],
+  "appointments": [
+    {
+      "clientName": "Carlos Silva",
+      "clientPhone": "(73) 98116-4949",
+      "clientNotes": "",
+      "serviceId": "atendimento-geral",
+      "serviceName": "Corte / Barba",
+      "price": null,
+      "durationMinutes": 35,
+      "date": "2026-10-29",
+      "time": "15:25",
+      "status": "confirmed",
+      "id": "apt-1791476402857",
+      "createdAt": "2026-10-08T16:20:02.857Z"
+    },
+    {
+      "clientName": "jr",
+      "clientPhone": "(13) 2456-7894",
+      "clientNotes": "",
+      "serviceId": "atendimento-geral",
+      "serviceName": "Corte / Barba",
+      "price": null,
+      "durationMinutes": 35,
+      "date": "2026-10-09",
+      "time": "10:10",
+      "status": "confirmed",
+      "id": "apt-1791476516246",
+      "createdAt": "2026-10-08T16:21:56.246Z"
+    }
+  ],
   "blockedSlots": []
 }
