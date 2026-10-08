@@ -60,6 +60,7 @@ function buildWhatsAppUrl(barberPhone, appointment, settings) {
 
   const shopTitle = settings?.shopName || 'Ed Barber Shop';
   const barberName = settings?.barberName || 'Ed';
+  const siteUrl = settings?.siteUrl || 'https://ed-barber-shop.onrender.com/';
 
   const lines = [
     toBold(`Agendamento - ${shopTitle}`),
@@ -72,6 +73,7 @@ function buildWhatsAppUrl(barberPhone, appointment, settings) {
     appointment.serviceName ? `${toBold('Procedimento')}: ${appointment.serviceName}` : null,
     appointment.clientNotes ? `${toBold('Observacao')}: ${appointment.clientNotes}` : null,
     `${toBold('WhatsApp')}: ${appointment.clientPhone}`,
+    `${toBold('Site')}: ${siteUrl}`,
     ``,
     `Aguardo a confirmação. Obrigado!`
   ].filter(line => line !== null);
