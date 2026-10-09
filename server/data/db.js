@@ -1,5 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const { MongoClient } = require('mongodb');
+
+let mongoClient = null;
+let mongoDb = null;
+let mongoCollection = null;
+let isMongoConnected = false;
 
 const DB_DIR = path.join(__dirname, '..', 'data_storage');
 const DB_FILE = path.join(DB_DIR, 'barber_db.json');
@@ -130,11 +136,72 @@ function loadDb() {
   return dbData;
 }
 
-function saveDbSync() {
+function saveDbLocalSync() {
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(dbData, null, 2), 'utf-8');
   } catch (err) {
-    console.error("Erro ao salvar banco de dados:", err);
+    console.error("Erro ao salvar arquivo local:", err);
+  }
+}
+
+async function syncToMongo() {
+  if (!isMongoConnected || !mongoCollection || !dbData) return;
+  try {
+    await mongoCollection.replaceOne(
+      { _id: 'main_state' },
+      { _id: 'main_state', ...dbData },
+      { upsert: true }
+    );
+  } catch (err) {
+    console.error('Erro ao sincronizar com MongoDB Atlas:', err.message);
+  }
+}
+
+function saveDbSync() {
+  saveDbLocalSync();
+  syncToMongo();
+}
+
+async function initMongo() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.log('ℹ️ MONGODB_URI não configurado. Utilizando armazenamento local JSON (barber_db.json).');
+    loadDb();
+    return false;
+  }
+
+  try {
+    mongoClient = new MongoClient(uri, { serverSelectionTimeoutMS: 8000 });
+    await mongoClient.connect();
+    mongoDb = mongoClient.db('edbarbershop');
+    mongoCollection = mongoDb.collection('app_state');
+    isMongoConnected = true;
+    console.log('✅ Conectado com sucesso ao MongoDB Atlas!');
+
+    // Tenta carregar do MongoDB Atlas
+    const cloudDoc = await mongoCollection.findOne({ _id: 'main_state' });
+    if (cloudDoc) {
+      delete cloudDoc._id;
+      dbData = {
+        settings: { ...defaultState.settings, ...(cloudDoc.settings || {}) },
+        services: Array.isArray(cloudDoc.services) ? cloudDoc.services : defaultState.services,
+        appointments: Array.isArray(cloudDoc.appointments) ? cloudDoc.appointments : defaultState.appointments,
+        blockedSlots: Array.isArray(cloudDoc.blockedSlots) ? cloudDoc.blockedSlots : defaultState.blockedSlots,
+      };
+      saveDbLocalSync();
+      console.log('🔄 Dados carregados do MongoDB Atlas e sincronizados com cache local.');
+    } else {
+      console.log('🚀 Inicializando banco no MongoDB Atlas com os dados existentes...');
+      loadDb();
+      await syncToMongo();
+      console.log('✨ Dados migrados com sucesso para o MongoDB Atlas!');
+    }
+    return true;
+  } catch (err) {
+    console.error('⚠️ Falha ao conectar ao MongoDB Atlas. Usando armazenamento local temporariamente:', err.message);
+    isMongoConnected = false;
+    loadDb();
+    return false;
   }
 }
 
@@ -342,7 +409,8 @@ const db = {
     data.blockedSlots = data.blockedSlots.filter(b => b.id !== id);
     saveDbSync();
     return true;
-  }
+  },
+  init: initMongo
 };
 
 module.exports = db;

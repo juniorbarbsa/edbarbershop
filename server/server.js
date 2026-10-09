@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config();
 
 const apiRoutes = require('./routes/api');
+const db = require('./data/db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -64,7 +65,13 @@ app.get('*', (req, res, next) => {
 // Health check for Cloud Platforms (Render, Railway, etc.)
 app.get('/healthz', (req, res) => res.status(200).send('OK'));
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`💈 Servidor Ed Barber Shop rodando na porta ${PORT}`);
-  console.log(`👉 API disponível em: http://0.0.0.0:${PORT}/api/public-info`);
-});
+async function startServer() {
+  await db.init();
+
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`💈 Servidor Ed Barber Shop rodando na porta ${PORT}`);
+    console.log(`👉 API disponível em: http://0.0.0.0:${PORT}/api/public-info`);
+  });
+}
+
+startServer();
